@@ -7,4 +7,5 @@ markdown==3.5.1
 djangorestframework==3.14.0
 djangorestframework-simplejwt==5.3.1
 mysqlclient==2.2.1
-daphne==4
+gunicorn==21.2.0
+wechatpy==1.8.18

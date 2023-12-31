@@ -155,3 +155,8 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
 }
+
+WE_CHAT = {
+    "APPID": env("APPID"),  # 小程序ID
+    "APP_SECRET": env("APP_SECRET"),  # 小程序SECRET
+}
