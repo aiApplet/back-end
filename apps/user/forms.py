@@ -4,10 +4,13 @@
 # @email:anningforchina@gmail.com
 # @time:2024/01/01 00:12
 # @file:forms.py
+from datetime import datetime
+
 from django.contrib.auth.hashers import make_password
+from django.db import transaction
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from apps.user.models import User
+from apps.user.models import User, SignInDate, AccountRecord
 from rest_framework import serializers
 from drf.serializers import ModelSerializer
 from utils.wechat import wechat
@@ -40,3 +43,31 @@ class UserCreateForms(ModelSerializer):
         refresh = RefreshToken.for_user(user)
         return {"token": str(refresh.access_token)}
 
+
+class SignInDateForms(ModelSerializer):
+    class Meta:
+        model = SignInDate
+        fields = ["user", ]
+        extra_kwargs = {
+            "user": {"read_only": True},
+        }
+
+    def validate(self, attrs):
+        user = self.context["request"].user
+        if SignInDate.objects.filter(user=user, date=datetime.date.today()).exists():
+            raise serializers.ValidationError("你今天已经签到了。")
+
+    @transaction.atomic
+    def create(self, validated_data):
+        instance = super().create(validated_data)
+        amount = 1
+        instance.user.balance += amount
+        balance = instance.user.balance
+        instance.user.save()
+        AccountRecord.objects.create(
+            user=instance.user,
+            amount=amount,
+            balance=balance,
+            remark=f"签到获得{amount}积分",
+        )
+        return instance

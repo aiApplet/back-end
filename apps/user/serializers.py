@@ -4,14 +4,19 @@
 # @email:anningforchina@gmail.com
 # @time:2024/01/01 00:11
 # @file:serializers.py
-from apps.user.models import User
+from rest_framework import serializers
+
+from apps.user.models import User, AccountRecord
 from drf.serializers import ModelSerializer
 
 
 class UserSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'nickname', 'avatar']
+        fields = ['id', 'nickname', 'avatar', 'balance']
+        extra_kwargs = {
+            'balance': {'read_only': True},
+        }
 
     def update(self, instance, validated_data):
         instance.nickname = validated_data.get('nickname', instance.nickname)
@@ -19,3 +24,10 @@ class UserSerializer(ModelSerializer):
         instance.save()
         return instance
 
+
+class AccountRecordSerializer(ModelSerializer):
+    create_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
+
+    class Meta:
+        model = AccountRecord
+        exclude = ['user', ]

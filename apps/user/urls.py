@@ -11,5 +11,7 @@ app_name = 'user'
 router = routers.DefaultRouter()
 
 router.register("user", views.UserViewSet, basename="user")
+router.register("signin", views.SignInViewSet, basename="signin")
+router.register("account_record", views.AccountRecordViewSet, basename="account_record")
 
 urlpatterns = router.urls

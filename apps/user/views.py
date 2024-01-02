@@ -2,9 +2,10 @@ from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
 
 from apps.user import serializers, forms
-from apps.user.models import User
+from apps.user.models import User, SignInDate, AccountRecord
 from drf import mixins
 from drf import viewsets
+from drf.pagination import PageNumberPagination
 from drf.response import success_response
 
 
@@ -39,3 +40,23 @@ class UserViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.UpdateM
         serializer.is_valid(raise_exception=True)
         instance = self.perform_create(serializer)
         return success_response(instance)
+
+
+class SignInViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
+    queryset = SignInDate.objects.all()
+    serializer_class = forms.SignInDateForms
+    permission_classes = [IsAuthenticated, ]
+
+    def perform_create(self, serializer):
+        return serializer.save(user=self.request.user)
+
+
+class AccountRecordViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    queryset = AccountRecord.objects.all()
+    serializer_class = serializers.AccountRecordSerializer
+    permission_classes = [IsAuthenticated, ]
+    pagination_class = PageNumberPagination
+    filterset_fields = ["account_type", ]
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
