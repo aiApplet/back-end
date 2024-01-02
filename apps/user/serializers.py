@@ -11,7 +11,7 @@ from drf.serializers import ModelSerializer
 class UserSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ['nickname', 'avatar']
+        fields = ['id', 'nickname', 'avatar']
 
     def update(self, instance, validated_data):
         instance.nickname = validated_data.get('nickname', instance.nickname)

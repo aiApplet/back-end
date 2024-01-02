@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 import os
 import sys
+from datetime import timedelta
 from pathlib import Path
 import environ
 
@@ -43,6 +44,7 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "django_filters",
     "rest_framework_simplejwt",
+    "drf_spectacular",
 ]
 
 THIRD_PARTY_LOCAL_DEV_APPS = [
@@ -154,7 +156,16 @@ AUTH_USER_MODEL = "user.User"
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'drf.custom_auto_schema.CustomAutoSchema',
+    "EXCEPTION_HANDLER": 'drf.handler.exception_handler',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'AI-Applet',
+    'DESCRIPTION': 'ai绘图小程序接口文档',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
 }
 
 WE_CHAT = {
@@ -162,3 +173,7 @@ WE_CHAT = {
     "APP_SECRET": env("APP_SECRET"),  # 小程序SECRET
 }
 CSRF_TRUSTED_ORIGINS = ["https://ai.xiazq.com"]
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10),
+}

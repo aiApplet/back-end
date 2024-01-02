@@ -10,6 +10,7 @@ from drf.response import success_response
 
 # Create your views here.
 
+
 class UserViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.UpdateModelMixin, viewsets.GenericViewSet):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
@@ -27,10 +28,12 @@ class UserViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.UpdateM
         return [permission() for permission in permission_classes]
 
     def list(self, request, *args, **kwargs):
+        """获取头像、id、昵称"""
         serializer = self.get_serializer(self.request.user)
         return success_response(serializer.data)
 
     def create(self, request, *args, **kwargs):
+        """拿到微信code查询或者创建一个用户，返回token"""
         form_class = getattr(self, "create_form_class", None)
         serializer = form_class(data=request.data, context=self.get_serializer_context())
         serializer.is_valid(raise_exception=True)
