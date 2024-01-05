@@ -13,17 +13,17 @@ class StylesAdmin(admin.ModelAdmin):
 
 
 class LorasAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'nickname', 'weight', 'cover', 'sort']
+    list_display = ['id', 'name', 'nickname', 'weight', 'cover_img', 'sort']
     list_editable = ['sort', ]
 
-    def cover(self, obj):
+    def cover_img(self, obj):
         return format_html(
             '<img src="{}" style="max-width:200px; max-height:200px"/>'.format(
                 obj.cover.url
             )
         )
 
-    cover.short_description = "封面图"
+    cover_img.short_description = "封面图"
 
 
 class DrawConfigAdmin(admin.ModelAdmin):
