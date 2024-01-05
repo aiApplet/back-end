@@ -21,15 +21,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, os.path.join(BASE_DIR, "apps"))
 
 env = environ.Env()
-environ.Env.read_env()
+environ.Env.read_env(
+    # DEBUG=(bool, True),
+)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env("SECRET_KEY")
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env("DEBUG")
+DEBUG = env("DEBUG", bool)
 
 ALLOWED_HOSTS = ["*"]
 
