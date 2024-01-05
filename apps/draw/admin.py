@@ -25,6 +25,11 @@ class LorasAdmin(admin.ModelAdmin):
 
     cover_img.short_description = "封面图"
 
+    # 删除数据的同时将cover图片文件也删除
+    def delete_model(self, request, obj):
+        obj.cover.delete(save=False)
+        super().delete_model(request, obj)
+
 
 class DrawConfigAdmin(admin.ModelAdmin):
     list_display = ['id', 'prompt', 'negative_prompt', 'width', 'height', 'seed', 'sampler_name']
