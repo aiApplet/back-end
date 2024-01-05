@@ -38,6 +38,7 @@ ALLOWED_HOSTS = ["*"]
 
 MY_APPS = [
     "apps.user",
+    "apps.draw",
 ]
 
 THIRD_PARTY_APPS = [
@@ -178,3 +179,9 @@ CSRF_TRUSTED_ORIGINS = ["https://ai.xiazq.com"]
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10),
 }
+
+# 奖励设置
+# 签到奖励
+SIGN_IN_REWARD = 1
+# 邀请新用户奖励
+SHARE_NEW_USER = 1

@@ -6,7 +6,7 @@
 # @file:serializers.py
 from rest_framework import serializers
 
-from apps.user.models import User, AccountRecord
+from apps.user.models import User, AccountRecord, RechargeableCard
 from drf.serializers import ModelSerializer
 
 
@@ -30,4 +30,13 @@ class AccountRecordSerializer(ModelSerializer):
 
     class Meta:
         model = AccountRecord
+        exclude = ['user', ]
+
+
+class RechargeableCardSerializer(ModelSerializer):
+    create_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
+    use_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
+
+    class Meta:
+        model = RechargeableCard
         exclude = ['user', ]

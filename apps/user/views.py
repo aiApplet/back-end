@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.permissions import IsAuthenticated
 
 from apps.user import serializers, forms
-from apps.user.models import User, SignInDate, AccountRecord
+from apps.user.models import User, SignInDate, AccountRecord, RechargeableCard
 from drf import mixins
 from drf import viewsets
 from drf.pagination import PageNumberPagination
@@ -29,12 +29,12 @@ class UserViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.UpdateM
         return [permission() for permission in permission_classes]
 
     def list(self, request, *args, **kwargs):
-        """获取头像、id、昵称"""
+        """获取头像、id、昵称、积分"""
         serializer = self.get_serializer(self.request.user)
         return success_response(serializer.data)
 
     def create(self, request, *args, **kwargs):
-        """拿到微信code查询或者创建一个用户，返回token"""
+        """拿到微信code查询或者创建一个用户，返回token。parent_id父ID，非必填，邀请分享人，用于奖励。"""
         form_class = getattr(self, "create_form_class", None)
         serializer = form_class(data=request.data, context=self.get_serializer_context())
         serializer.is_valid(raise_exception=True)
@@ -56,7 +56,22 @@ class AccountRecordViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     serializer_class = serializers.AccountRecordSerializer
     permission_classes = [IsAuthenticated, ]
     pagination_class = PageNumberPagination
-    filterset_fields = ["account_type", ]
+    filterset_fields = ["record_type", "reward_type"]
 
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
+
+
+class RechargeableCardViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, viewsets.GenericViewSet):
+    queryset = RechargeableCard.objects.filter(is_used=False)
+    create_form_class = forms.RechargeableCardForms
+    serializer_class = serializers.RechargeableCardSerializer
+    permission_classes = [IsAuthenticated, ]
+
+    def perform_create(self, serializer):
+        return serializer.save(user=self.request.user)
+
+    def get_queryset(self):
+        if self.action == "list":
+            return super().get_queryset().filter(user=self.request.user)
+        return super().get_queryset()

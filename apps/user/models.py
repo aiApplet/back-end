@@ -3,6 +3,8 @@ from django.contrib.auth.models import AbstractUser, Group, Permission
 
 from django.conf import settings
 
+from apps.user import const
+
 
 # Create your models here.
 class User(AbstractUser):
@@ -44,8 +46,10 @@ class AccountRecord(models.Model):
     amount = models.PositiveIntegerField(default=0, verbose_name="金额")
     balance = models.PositiveIntegerField(verbose_name="余额")
     create_time = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
-    account_type = models.BooleanField(default=True, verbose_name="账户类型", choices=((True, "收入"), (False, "支出")))
+    record_type = models.BooleanField(default=True, verbose_name="记录类型", choices=((True, "收入"), (False, "支出")))
+    reward_type = models.PositiveSmallIntegerField(verbose_name="收支分类", choices=const.RewardTypeChoices.choices)
     remark = models.CharField(max_length=255, null=True, blank=True, verbose_name="备注")
+
 
     class Meta:
         db_table = "account_record"
@@ -63,3 +67,17 @@ class SignInDate(models.Model):
         verbose_name = "签到日期"
         verbose_name_plural = verbose_name
         ordering = ["-id"]
+
+
+class RechargeableCard(models.Model):
+    card_number = models.CharField(max_length=20, unique=True, verbose_name="卡号")
+    amount = models.PositiveIntegerField(default=0, verbose_name="金额")
+    is_used = models.BooleanField(default=False, verbose_name="是否已使用")
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
+    use_time = models.DateTimeField(null=True, blank=True, verbose_name="使用时间")
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, verbose_name="用户", null=True, blank=True, default=None)
+
+    class Meta:
+        db_table = "rechargeable_card"
+        verbose_name = "充值卡"
+        verbose_name_plural = verbose_name
