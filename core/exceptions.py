@@ -22,7 +22,7 @@ ERROR_PHRASES = {
 class LoadAppExceptions:
     """加载应用内的异常短语"""
 
-    app_list = ["user", ]
+    app_list = ["user", "draw"]
 
     @classmethod
     def get_valid_exception(cls, data):

@@ -16,7 +16,7 @@ class Styles(models.Model):
     class Meta:
         verbose_name = "风格"
         verbose_name_plural = verbose_name
-        ordering = ['-id']
+        ordering = ['-sort', '-id']
 
     def __str__(self):
         return self.name
