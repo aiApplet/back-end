@@ -15,6 +15,7 @@ router.register("draw", views.DrawViewSet, basename="draw")
 router.register("prompts", views.PromptsViewSet, basename="prompts")
 router.register("styles", views.StylesViewSet, basename="styles")
 router.register("loras", views.LorasViewSet, basename="loras")
+router.register("pictures", views.PicturesViewSet, basename="pictures")
 urlpatterns = [
     path('random_prompts', views.RandomPromptViewSet.as_view(), name='random_prompts')
 ]
