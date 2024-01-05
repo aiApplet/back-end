@@ -1,5 +1,3 @@
-import os
-
 from django.db import models
 
 from apps.draw import const
@@ -42,15 +40,10 @@ class Loras(models.Model):
         return self.name
 
     def delete(self, *args, **kwargs):
-        # 获取图片路径
-        filepath = self.cover.path
-
-        # 判断文件是否存在
-        if os.path.exists(filepath):
-            # 删除文件
-            os.remove(filepath)
-
-        super().delete(*args, **kwargs)
+        # 如果实例有关联的封面
+        if self.cover:
+            self.cover.delete()  # 删除存储中的文件
+        super(Loras, self).delete(*args, **kwargs)  # 调用“真正的”delete方法。
 
 
 class DrawConfig(models.Model):
