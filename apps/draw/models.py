@@ -39,12 +39,6 @@ class Loras(models.Model):
     def __str__(self):
         return self.name
 
-    def delete(self, *args, **kwargs):
-        # 如果实例有关联的封面
-        if self.cover:
-            self.cover.delete()  # 删除存储中的文件
-        super(Loras, self).delete(*args, **kwargs)  # 调用“真正的”delete方法。
-
 
 class DrawConfig(models.Model):
     prompt = models.CharField(max_length=255, default="", verbose_name="提示词")

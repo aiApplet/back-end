@@ -11,3 +11,4 @@ gunicorn==21.2.0
 wechatpy==1.8.18
 drf-spectacular==0.27.0
 pillow==10.2
+django-cleanup==8.0
