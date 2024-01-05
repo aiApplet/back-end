@@ -66,7 +66,7 @@ class UserLikeViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, viewset
         serializer.save(user=self.request.user)
 
 
-class UserCommentViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
+class UserCommentViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
     queryset = UserComment.objects.all()
     serializer_class = serializers.UserCommentSerializer
     create_form_class = forms.UserCommentForm

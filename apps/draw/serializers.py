@@ -38,10 +38,11 @@ class LorasSerializer(ModelSerializer):
 class DrawHistorySerializer(ModelSerializer):
     nickname = serializers.CharField(source="user.nickname", read_only=True)
     avatar = serializers.CharField(source="user.avatar", read_only=True)
+    create_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
 
     class Meta:
         model = DrawHistory
-        exclude = ("status",)
+        exclude = ("status", "user",)
         depth = 1
 
 
@@ -53,7 +54,15 @@ class UserLikeSerializer(ModelSerializer):
 
 class UserCommentSerializer(ModelSerializer):
     create_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
+    is_author = serializers.SerializerMethodField()
 
     class Meta:
         model = UserComment
-        fields = ("id", "content", "create_time",)
+        fields = ("id", "content", "create_time", "is_author",)
+
+    def get_is_author(self, obj) -> bool:
+        """
+        判断当前用户是否为评论作者
+        """
+        request = self.context["request"]
+        return request.user == obj.user
