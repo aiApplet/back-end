@@ -11,12 +11,17 @@ from drf.serializers import ModelSerializer
 
 
 class UserSerializer(ModelSerializer):
+    is_avatar = serializers.SerializerMethodField(help_text="是否已经有头像")
+
     class Meta:
         model = User
-        fields = ['id', 'nickname', 'avatar', 'balance']
+        fields = ['id', 'nickname', 'avatar', 'balance', 'is_avatar']
         extra_kwargs = {
             'balance': {'read_only': True},
         }
+
+    def get_is_avatar(self) -> bool:
+        return bool(self.instance.avatar)
 
     def update(self, instance, validated_data):
         instance.nickname = validated_data.get('nickname', instance.nickname)
