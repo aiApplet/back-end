@@ -11,7 +11,7 @@ from drf.serializers import ModelSerializer
 
 
 class UserSerializer(ModelSerializer):
-    is_avatar = serializers.SerializerMethodField(help_text="是否已经有头像")
+    is_nickname = serializers.SerializerMethodField(help_text="是否绑定微信昵称")
 
     class Meta:
         model = User
@@ -20,8 +20,8 @@ class UserSerializer(ModelSerializer):
             'balance': {'read_only': True},
         }
 
-    def get_is_avatar(self) -> bool:
-        return bool(self.instance.avatar)
+    def get_is_nickname(self, obj) -> bool:
+        return obj.nickname[:2] != "游客"
 
     def update(self, instance, validated_data):
         instance.nickname = validated_data.get('nickname', instance.nickname)
