@@ -158,9 +158,6 @@ DEFAULT_AVATAR = "https://ai.xiazq.com/media/avatar/avatar.jpg"
 AUTH_USER_MODEL = "user.User"
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ],
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
