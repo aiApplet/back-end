@@ -112,7 +112,7 @@ class CarouselFigure(models.Model):
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
-        self.cover = upload_image(
+        self.image = upload_image(
             f"media/carousel/{self.image.name}", self.image.read()
         )
         return super().save(
