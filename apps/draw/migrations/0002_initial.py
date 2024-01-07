@@ -6,48 +6,73 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('draw', '0001_initial'),
+        ("draw", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='drawhistory',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='用户'),
+            model_name="drawhistory",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="用户",
+            ),
         ),
         migrations.AddField(
-            model_name='drawconfig',
-            name='lora',
-            field=models.ManyToManyField(blank=True, to='draw.loras', verbose_name='Lora模型'),
+            model_name="drawconfig",
+            name="lora",
+            field=models.ManyToManyField(
+                blank=True, to="draw.loras", verbose_name="Lora模型"
+            ),
         ),
         migrations.AddField(
-            model_name='drawconfig',
-            name='style',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='draw.styles', verbose_name='风格'),
+            model_name="drawconfig",
+            name="style",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.PROTECT,
+                to="draw.styles",
+                verbose_name="风格",
+            ),
         ),
         migrations.AddField(
-            model_name='usercomment',
-            name='history',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='draw.drawhistory', verbose_name='绘图历史'),
+            model_name="usercomment",
+            name="history",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="draw.drawhistory",
+                verbose_name="绘图历史",
+            ),
         ),
         migrations.AddField(
-            model_name='usercomment',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='用户'),
+            model_name="usercomment",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="用户",
+            ),
         ),
         migrations.AddField(
-            model_name='userlike',
-            name='history',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='draw.drawhistory', verbose_name='绘图历史'),
+            model_name="userlike",
+            name="history",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to="draw.drawhistory",
+                verbose_name="绘图历史",
+            ),
         ),
         migrations.AddField(
-            model_name='userlike',
-            name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL, verbose_name='用户'),
+            model_name="userlike",
+            name="user",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL,
+                verbose_name="用户",
+            ),
         ),
     ]

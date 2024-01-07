@@ -6,6 +6,14 @@
 #
 --index-url https://pypi.tuna.tsinghua.edu.cn/simple/
 
+aliyun-python-sdk-core==2.14.0
+    # via
+    #   aliyun-python-sdk-kms
+    #   oss2
+aliyun-python-sdk-kms==2.16.2
+    # via oss2
+arrow==1.3.0
+    # via -r requirements.in
 asgiref==3.7.2
     # via django
 async-timeout==4.0.3
@@ -18,10 +26,16 @@ build==1.0.3
     # via pip-tools
 certifi==2023.11.17
     # via requests
+cffi==1.16.0
+    # via cryptography
 charset-normalizer==3.3.2
     # via requests
 click==8.1.7
     # via pip-tools
+crcmod==1.7
+    # via oss2
+cryptography==41.0.7
+    # via aliyun-python-sdk-core
 django==5.0
     # via
     #   django-filter
@@ -55,6 +69,8 @@ idna==3.6
     # via requests
 inflection==0.5.1
     # via drf-spectacular
+jmespath==0.10.0
+    # via aliyun-python-sdk-core
 jsonschema==4.20.0
     # via drf-spectacular
 jsonschema-specifications==2023.12.1
@@ -65,6 +81,8 @@ mysqlclient==2.2.1
     # via -r requirements.in
 optionaldict==0.1.2
     # via wechatpy
+oss2==2.18.4
+    # via -r requirements.in
 packaging==23.2
     # via
     #   build
@@ -73,12 +91,18 @@ pillow==10.2.0
     # via -r requirements.in
 pip-tools==7.3.0
     # via -r requirements.in
+pycparser==2.21
+    # via cffi
+pycryptodome==3.19.1
+    # via oss2
 pyjwt==2.8.0
     # via djangorestframework-simplejwt
 pyproject-hooks==1.0.0
     # via build
 python-dateutil==2.8.2
-    # via wechatpy
+    # via
+    #   arrow
+    #   wechatpy
 pytz==2023.3.post1
     # via djangorestframework
 pyyaml==6.0.1
@@ -90,13 +114,16 @@ referencing==0.32.0
     #   jsonschema
     #   jsonschema-specifications
 requests==2.31.0
-    # via wechatpy
+    # via
+    #   oss2
+    #   wechatpy
 rpds-py==0.16.2
     # via
     #   jsonschema
     #   referencing
 six==1.16.0
     # via
+    #   oss2
     #   python-dateutil
     #   wechatpy
 sqlparse==0.4.4
@@ -106,6 +133,8 @@ tomli==2.0.1
     #   build
     #   pip-tools
     #   pyproject-hooks
+types-python-dateutil==2.8.19.20240106
+    # via arrow
 typing-extensions==4.9.0
     # via asgiref
 uritemplate==4.1.1

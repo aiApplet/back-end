@@ -22,7 +22,20 @@ sys.path.insert(0, os.path.join(BASE_DIR, "apps"))
 
 env = environ.Env()
 environ.Env.read_env(
-    # DEBUG=(bool, True),
+    SECRET_KEY=(str, "#l$5e@w!cc9-i1sl$&rf+bjn)1&!&+6&7=inzyav6cwz6)z7c+"),
+    DEBUG=(bool, False),
+    APPID=(str, ""),
+    APP_SECRET=(str, ""),
+    DEFAULT_DATABASE=(str, ""),
+    REDIS_LOCATION=(str, ""),
+    ALIYUN_ENDPOINT=None,
+    ALIYUN_INTERNAL_ENDPOINT=None,
+    ALIYUN_KEY=None,
+    ALIYUN_SECRET=None,
+    ALIYUN_BUCKET=None,
+    ALIYUN_HOST=None,
+    ALIYUN_CDN_STATIC_HOST=None,
+    ALIYUN_CDN_MEDIA_HOST=None,
 )
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -47,7 +60,7 @@ THIRD_PARTY_APPS = [
     "django_filters",
     "rest_framework_simplejwt",
     "drf_spectacular",
-    "django_cleanup.apps.CleanupConfig"
+    "django_cleanup.apps.CleanupConfig",
 ]
 
 THIRD_PARTY_LOCAL_DEV_APPS = [
@@ -58,48 +71,48 @@ if DEBUG:
     THIRD_PARTY_APPS += THIRD_PARTY_LOCAL_DEV_APPS
 
 INSTALLED_APPS = (
-        [
-            "simpleui",
-            'django.contrib.admin',
-            'django.contrib.auth',
-            'django.contrib.contenttypes',
-            'django.contrib.sessions',
-            'django.contrib.messages',
-            'django.contrib.staticfiles',
-        ]
-        + MY_APPS
-        + THIRD_PARTY_APPS
+    [
+        "simpleui",
+        "django.contrib.admin",
+        "django.contrib.auth",
+        "django.contrib.contenttypes",
+        "django.contrib.sessions",
+        "django.contrib.messages",
+        "django.contrib.staticfiles",
+    ]
+    + MY_APPS
+    + THIRD_PARTY_APPS
 )
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = 'back_end.urls'
+ROOT_URLCONF = "back_end.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'back_end.wsgi.application'
+WSGI_APPLICATION = "back_end.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
@@ -121,16 +134,16 @@ CACHES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
 
@@ -153,7 +166,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 DEFAULT_AVATAR = "https://ai.xiazq.com/media/avatar/avatar.jpg"
 AUTH_USER_MODEL = "user.User"
 
@@ -161,22 +174,25 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
-    'DEFAULT_SCHEMA_CLASS': 'drf.custom_auto_schema.CustomAutoSchema',
-    "EXCEPTION_HANDLER": 'drf.handler.exception_handler',
+    "DEFAULT_SCHEMA_CLASS": "drf.custom_auto_schema.CustomAutoSchema",
+    "EXCEPTION_HANDLER": "drf.handler.exception_handler",
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
+    "UPLOADED_FILES_USE_URL": False,
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'AI-Applet',
-    'DESCRIPTION': 'ai绘图小程序接口文档',
-    'VERSION': '1.0.0',
-    'SERVE_INCLUDE_SCHEMA': False,
+    "TITLE": "AI-Applet",
+    "DESCRIPTION": "ai绘图小程序接口文档",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
 }
 
+# 微信小程序
 WE_CHAT = {
     "APPID": env("APPID"),  # 小程序ID
     "APP_SECRET": env("APP_SECRET"),  # 小程序SECRET
 }
+
 CSRF_TRUSTED_ORIGINS = ["https://ai.xiazq.com"]
 
 SIMPLE_JWT = {
@@ -188,3 +204,27 @@ SIMPLE_JWT = {
 SIGN_IN_REWARD = 1
 # 邀请新用户奖励
 SHARE_NEW_USER = 1
+
+# stable diffusion 配置
+STABLE_DIFFUSION_CONFIG = {
+    "sd_model_checkpoint": "RealitiesEdgeXLLCM_TURBOXL.safetensors [c1d5646e8f]",
+    "sd_vae": "Automatic",
+    "steps": "8",
+    "cfg_scale": "2",
+    "seed": "-1",
+    "sampler_name": "LCM",
+    "negative_prompt": "",
+}
+
+# 阿里云OSS 配置
+ALIYUN_OSS_CONFIG = {
+    "end_point": env("ALIYUN_ENDPOINT"),
+    "end_internal_point": env("ALIYUN_INTERNAL_ENDPOINT"),
+    "key": env("ALIYUN_KEY"),
+    "secret": env("ALIYUN_SECRET"),
+    "bucket": env("ALIYUN_BUCKET"),
+    "host": env("ALIYUN_HOST"),
+    "cdn_static_host": env("ALIYUN_CDN_STATIC_HOST"),
+    "cdn_media_host": env("ALIYUN_CDN_MEDIA_HOST"),
+}
+ALIYUN_OSS_ENABLE = True

@@ -8,6 +8,8 @@
 import random
 from datetime import datetime
 
+import arrow
+
 
 def random_dict_from_list(lst):
     """
@@ -25,3 +27,7 @@ def random_name():
     now = datetime.now()
     name = now.strftime("%Y%m%d%H%M%S")
     return name
+
+
+def local_timestamp():
+    return arrow.utcnow().to("Asia/Shanghai").timestamp()

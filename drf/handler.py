@@ -13,7 +13,6 @@ logger = logging.getLogger("django")
 
 
 def business_exception_handler(exc, context):
-
     set_rollback()
     return error_response(exc.code, exc.message, exc.data, exc.app)
 
@@ -48,7 +47,9 @@ def exception_handler(exc, context):
         return business_exception_handler(api_exception, context)
 
     if isinstance(exc, APIException):
-        api_exception = BusinessException(code=exc.status_code, message=exc.default_detail, data=exc.detail)
+        api_exception = BusinessException(
+            code=exc.status_code, message=exc.default_detail, data=exc.detail
+        )
         return business_exception_handler(api_exception, context)
 
     # 是否直接抛出严重的错误，线上环境会关闭此配置

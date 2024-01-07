@@ -4,11 +4,14 @@ from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.conf import settings
 
 from apps.user import const
+from utils.aliyun import upload_image
 
 
 # Create your models here.
 class User(AbstractUser):
-    avatar = models.CharField(max_length=100, default=settings.DEFAULT_AVATAR, verbose_name="头像")
+    avatar = models.CharField(
+        max_length=100, default=settings.DEFAULT_AVATAR, verbose_name="头像"
+    )
     nickname = models.CharField(max_length=100, verbose_name="微信昵称")
     balance = models.PositiveIntegerField(default=0, verbose_name="余额")
 
@@ -46,8 +49,12 @@ class AccountRecord(models.Model):
     amount = models.PositiveIntegerField(default=0, verbose_name="金额")
     balance = models.PositiveIntegerField(verbose_name="余额")
     create_time = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
-    record_type = models.BooleanField(default=True, verbose_name="记录类型", choices=((True, "收入"), (False, "支出")))
-    reward_type = models.PositiveSmallIntegerField(verbose_name="收支分类", choices=const.RewardTypeChoices.choices)
+    record_type = models.BooleanField(
+        default=True, verbose_name="记录类型", choices=((True, "收入"), (False, "支出"))
+    )
+    reward_type = models.PositiveSmallIntegerField(
+        verbose_name="收支分类", choices=const.RewardTypeChoices.choices
+    )
     remark = models.CharField(max_length=255, null=True, blank=True, verbose_name="备注")
 
     class Meta:
@@ -74,7 +81,14 @@ class RechargeableCard(models.Model):
     is_used = models.BooleanField(default=False, verbose_name="是否已使用")
     create_time = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
     use_time = models.DateTimeField(null=True, blank=True, verbose_name="使用时间")
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, verbose_name="用户", null=True, blank=True, default=None)
+    user = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        verbose_name="用户",
+        null=True,
+        blank=True,
+        default=None,
+    )
 
     class Meta:
         db_table = "rechargeable_card"
@@ -83,15 +97,27 @@ class RechargeableCard(models.Model):
 
 
 class CarouselFigure(models.Model):
-    image = models.ImageField(upload_to='carousel/', verbose_name='图片')
-    link = models.CharField(max_length=255, verbose_name='链接')
-    create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
-    sort = models.PositiveSmallIntegerField(default=0, verbose_name='排序')
-    is_show = models.BooleanField(default=True, verbose_name='是否显示')
+    image = models.ImageField(upload_to="carousel/", verbose_name="图片")
+    link = models.CharField(max_length=255, verbose_name="链接")
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
+    sort = models.PositiveSmallIntegerField(default=0, verbose_name="排序")
+    is_show = models.BooleanField(default=True, verbose_name="是否显示")
 
     class Meta:
-        db_table = 'carousel_figure'
-        verbose_name = '轮播图'
+        db_table = "carousel_figure"
+        verbose_name = "轮播图"
         verbose_name_plural = verbose_name
-        ordering = ['-sort', '-id']
+        ordering = ["-sort", "-id"]
 
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        self.cover = upload_image(
+            f"media/carousel/{self.image.name}", self.image.read()
+        )
+        return super().save(
+            force_insert=force_insert,
+            force_update=force_update,
+            using=using,
+            update_fields=update_fields,
+        )

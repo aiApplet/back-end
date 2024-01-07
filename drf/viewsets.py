@@ -48,7 +48,9 @@ class GenericViewSet(viewsets.GenericViewSet):
         return super().get_serializer_class()
 
 
-class ReadOnlyModelViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, GenericViewSet):
+class ReadOnlyModelViewSet(
+    mixins.RetrieveModelMixin, mixins.ListModelMixin, GenericViewSet
+):
     pass
 
 

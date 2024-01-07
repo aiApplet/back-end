@@ -1,26 +1,45 @@
+import base64
+
+from django.conf import settings
 from django.shortcuts import render
 from django_filters.rest_framework import DjangoFilterBackend
+from drf_spectacular.utils import extend_schema
 from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
-from apps.draw import serializers, forms
-from apps.draw.models import DrawConfig, PromptAssistant, RandomPrompt, Styles, Loras, DrawHistory, UserLike, \
-    UserComment
+from apps.draw import serializers, forms, const
+from apps.draw.models import (
+    DrawConfig,
+    PromptAssistant,
+    RandomPrompt,
+    Styles,
+    Loras,
+    DrawHistory,
+    UserLike,
+    UserComment,
+)
+from apps.user.models import User
+from core import exceptions
+from core.exceptions import raise_business_exception
 from drf import mixins
 from drf import viewsets
 from drf.pagination import PageNumberPagination
 from drf.response import success_response
+from utils.aliyun import aliyun
 from utils.utils import random_dict_from_list
 
 
 # Create your views here.
 
+
 class DrawViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     queryset = DrawConfig.objects.all()
     serializer_class = serializers.DrawHistoryImageSerializer
     create_form_class = forms.DrawConfigCreateForms
-    permission_classes = [IsAuthenticated, ]
+    permission_classes = [
+        IsAuthenticated,
+    ]
 
 
 class PromptsViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
@@ -36,12 +55,42 @@ class RandomPromptViewSet(APIView):
         return success_response(data=random_dict_from_list(prompt.prompts))
 
 
-class StylesViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class AliyunOssTokenViewSet(APIView):
+    permission_classes = [
+        IsAuthenticated,
+    ]
+
+    @extend_schema(
+        tags=["阿里云配置"],
+        summary="获取阿里云配置，用于上传阿里云",
+        description="""
+            {
+                "accessid": "",
+                "host": "",
+                "policy": "",
+                "signature": "",
+                "expire": 1692871041.288708,
+                "dir": "media/font_end/",
+            }
+            """,
+    )
+    def get(self, request, *args, **kwargs) -> dict:
+        if settings.ALIYUN_OSS_ENABLE:
+            token = aliyun.get_token()
+            return success_response(token)
+        raise_business_exception(exceptions.EXCEPTION_SERVER_NOT_ENABLE, app="draw")
+
+
+class StylesViewSet(
+    mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
+):
     queryset = Styles.objects.all()
     serializer_class = serializers.StylesSerializer
 
 
-class LorasViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class LorasViewSet(
+    mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
+):
     queryset = Loras.objects.all()
     serializer_class = serializers.LorasSerializer
 
@@ -50,13 +99,17 @@ class PicturesViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = DrawHistory.objects.all()
     serializer_class = serializers.DrawHistorySerializer
     pagination_class = PageNumberPagination
-    filterset_fields = ["config__style", ]
+    filterset_fields = [
+        "config__style",
+    ]
     filter_backends = (DjangoFilterBackend, OrderingFilter)
-    ordering_fields = ['create_time', 'like_count', 'comment_count']  # 可以排序的字段
-    ordering = ['-create_time']  # 默认排序
+    ordering_fields = ["create_time", "like_count", "comment_count"]  # 可以排序的字段
+    ordering = ["-create_time"]  # 默认排序
 
 
-class UserLikeViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
+class UserLikeViewSet(
+    mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet
+):
     queryset = UserLike.objects.all()
     serializer_class = serializers.UserLikeSerializer
     create_form_class = forms.UserLikeForm
@@ -66,12 +119,19 @@ class UserLikeViewSet(mixins.CreateModelMixin, mixins.DestroyModelMixin, viewset
         serializer.save(user=self.request.user)
 
 
-class UserCommentViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet):
+class UserCommentViewSet(
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
+    viewsets.GenericViewSet,
+):
     queryset = UserComment.objects.all()
     serializer_class = serializers.UserCommentSerializer
     create_form_class = forms.UserCommentForm
     permission_classes = [IsAuthenticated]
-    filterset_fields = ["history", ]
+    filterset_fields = [
+        "history",
+    ]
     pagination_class = PageNumberPagination
 
     def perform_create(self, serializer):

@@ -5,127 +5,257 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='DrawConfig',
+            name="DrawConfig",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('prompt', models.CharField(default='', max_length=1000, verbose_name='提示词')),
-                ('negative_prompt', models.CharField(default='', max_length=255, verbose_name='负面提示词')),
-                ('config', models.JSONField(default=dict, verbose_name='配置')),
-                ('width', models.PositiveSmallIntegerField(verbose_name='宽度')),
-                ('height', models.PositiveSmallIntegerField(verbose_name='高度')),
-                ('seed', models.CharField(default='-1', max_length=100, verbose_name='种子')),
-                ('sampler_name', models.CharField(default='', max_length=100, verbose_name='采样器')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "prompt",
+                    models.CharField(default="", max_length=1000, verbose_name="提示词"),
+                ),
+                (
+                    "negative_prompt",
+                    models.CharField(default="", max_length=255, verbose_name="负面提示词"),
+                ),
+                ("config", models.JSONField(default=dict, verbose_name="配置")),
+                ("width", models.PositiveSmallIntegerField(verbose_name="宽度")),
+                ("height", models.PositiveSmallIntegerField(verbose_name="高度")),
+                (
+                    "seed",
+                    models.CharField(default="-1", max_length=100, verbose_name="种子"),
+                ),
+                (
+                    "sampler_name",
+                    models.CharField(default="", max_length=100, verbose_name="采样器"),
+                ),
             ],
             options={
-                'verbose_name': '绘图配置',
-                'verbose_name_plural': '绘图配置',
-                'ordering': ['-id'],
+                "verbose_name": "绘图配置",
+                "verbose_name_plural": "绘图配置",
+                "ordering": ["-id"],
             },
         ),
         migrations.CreateModel(
-            name='Loras',
+            name="Loras",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(default='', max_length=100, verbose_name='Lora中文昵称')),
-                ('nickname', models.CharField(default='', max_length=100, verbose_name='Lora名称')),
-                ('weight', models.FloatField(default=1, verbose_name='权重')),
-                ('cover', models.ImageField(default='', upload_to='lora/', verbose_name='封面')),
-                ('sort', models.PositiveSmallIntegerField(default=0, help_text='排序', verbose_name='排序')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        default="", max_length=100, verbose_name="Lora中文昵称"
+                    ),
+                ),
+                (
+                    "nickname",
+                    models.CharField(default="", max_length=100, verbose_name="Lora名称"),
+                ),
+                ("weight", models.FloatField(default=1, verbose_name="权重")),
+                (
+                    "cover",
+                    models.ImageField(default="", upload_to="lora/", verbose_name="封面"),
+                ),
+                (
+                    "sort",
+                    models.PositiveSmallIntegerField(
+                        default=0, help_text="排序", verbose_name="排序"
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Lora模型',
-                'verbose_name_plural': 'Lora模型',
-                'ordering': ['-sort', '-id'],
+                "verbose_name": "Lora模型",
+                "verbose_name_plural": "Lora模型",
+                "ordering": ["-sort", "-id"],
             },
         ),
         migrations.CreateModel(
-            name='PromptAssistant',
+            name="PromptAssistant",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100, verbose_name='名称')),
-                ('prompts', models.JSONField(default=dict, verbose_name='提示词')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100, verbose_name="名称")),
+                ("prompts", models.JSONField(default=dict, verbose_name="提示词")),
             ],
             options={
-                'verbose_name': '提示词助手',
-                'verbose_name_plural': '提示词助手',
-                'ordering': ['-id'],
+                "verbose_name": "提示词助手",
+                "verbose_name_plural": "提示词助手",
+                "ordering": ["-id"],
             },
         ),
         migrations.CreateModel(
-            name='RandomPrompt',
+            name="RandomPrompt",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100, verbose_name='名称')),
-                ('prompts', models.JSONField(default=dict, verbose_name='提示词')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100, verbose_name="名称")),
+                ("prompts", models.JSONField(default=dict, verbose_name="提示词")),
             ],
             options={
-                'verbose_name': '随机提示词',
-                'verbose_name_plural': '随机提示词',
-                'ordering': ['-id'],
+                "verbose_name": "随机提示词",
+                "verbose_name_plural": "随机提示词",
+                "ordering": ["-id"],
             },
         ),
         migrations.CreateModel(
-            name='Styles',
+            name="Styles",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(default='', max_length=255, verbose_name='风格名称')),
-                ('style', models.CharField(default='', max_length=255, verbose_name='风格')),
-                ('sort', models.PositiveSmallIntegerField(default=0, help_text='排序', verbose_name='排序')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(default="", max_length=255, verbose_name="风格名称"),
+                ),
+                (
+                    "style",
+                    models.CharField(default="", max_length=255, verbose_name="风格"),
+                ),
+                (
+                    "sort",
+                    models.PositiveSmallIntegerField(
+                        default=0, help_text="排序", verbose_name="排序"
+                    ),
+                ),
             ],
             options={
-                'verbose_name': '风格',
-                'verbose_name_plural': '风格',
-                'ordering': ['-sort', '-id'],
+                "verbose_name": "风格",
+                "verbose_name_plural": "风格",
+                "ordering": ["-sort", "-id"],
             },
         ),
         migrations.CreateModel(
-            name='UserComment',
+            name="UserComment",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('content', models.CharField(max_length=255, verbose_name='内容')),
-                ('create_time', models.DateTimeField(auto_now_add=True, verbose_name='创建时间')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("content", models.CharField(max_length=255, verbose_name="内容")),
+                (
+                    "create_time",
+                    models.DateTimeField(auto_now_add=True, verbose_name="创建时间"),
+                ),
             ],
             options={
-                'verbose_name': '用户评论',
-                'verbose_name_plural': '用户评论',
-                'ordering': ['-create_time'],
+                "verbose_name": "用户评论",
+                "verbose_name_plural": "用户评论",
+                "ordering": ["-create_time"],
             },
         ),
         migrations.CreateModel(
-            name='UserLike',
+            name="UserLike",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('create_time', models.DateTimeField(auto_now_add=True, verbose_name='创建时间')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "create_time",
+                    models.DateTimeField(auto_now_add=True, verbose_name="创建时间"),
+                ),
             ],
             options={
-                'verbose_name': '用户点赞',
-                'verbose_name_plural': '用户点赞',
-                'ordering': ['-create_time'],
+                "verbose_name": "用户点赞",
+                "verbose_name_plural": "用户点赞",
+                "ordering": ["-create_time"],
             },
         ),
         migrations.CreateModel(
-            name='DrawHistory',
+            name="DrawHistory",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('image', models.ImageField(upload_to='draw/', verbose_name='图片')),
-                ('status', models.PositiveSmallIntegerField(choices=[(0, '进行中'), (1, '成功'), (2, '失败')], default=0, verbose_name='状态')),
-                ('create_time', models.DateTimeField(auto_now_add=True, verbose_name='创建时间')),
-                ('like_count', models.PositiveIntegerField(default=0, verbose_name='点赞数')),
-                ('comment_count', models.PositiveIntegerField(default=0, verbose_name='评论数')),
-                ('config', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='draw.drawconfig', verbose_name='配置')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("image", models.ImageField(upload_to="draw/", verbose_name="图片")),
+                (
+                    "status",
+                    models.PositiveSmallIntegerField(
+                        choices=[(0, "进行中"), (1, "成功"), (2, "失败")],
+                        default=0,
+                        verbose_name="状态",
+                    ),
+                ),
+                (
+                    "create_time",
+                    models.DateTimeField(auto_now_add=True, verbose_name="创建时间"),
+                ),
+                (
+                    "like_count",
+                    models.PositiveIntegerField(default=0, verbose_name="点赞数"),
+                ),
+                (
+                    "comment_count",
+                    models.PositiveIntegerField(default=0, verbose_name="评论数"),
+                ),
+                (
+                    "config",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="draw.drawconfig",
+                        verbose_name="配置",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': '绘图历史',
-                'verbose_name_plural': '绘图历史',
-                'ordering': ['-id'],
+                "verbose_name": "绘图历史",
+                "verbose_name_plural": "绘图历史",
+                "ordering": ["-id"],
             },
         ),
     ]

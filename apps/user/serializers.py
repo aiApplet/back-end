@@ -15,17 +15,17 @@ class UserSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['id', 'nickname', 'avatar', 'balance', 'is_nickname']
+        fields = ["id", "nickname", "avatar", "balance", "is_nickname"]
         extra_kwargs = {
-            'balance': {'read_only': True},
+            "balance": {"read_only": True},
         }
 
     def get_is_nickname(self, obj) -> bool:
         return obj.nickname[:2] != "游客"
 
     def update(self, instance, validated_data):
-        instance.nickname = validated_data.get('nickname', instance.nickname)
-        instance.avatar = validated_data.get('avatar', instance.avatar)
+        instance.nickname = validated_data.get("nickname", instance.nickname)
+        instance.avatar = validated_data.get("avatar", instance.avatar)
         instance.save()
         return instance
 
@@ -35,7 +35,9 @@ class AccountRecordSerializer(ModelSerializer):
 
     class Meta:
         model = AccountRecord
-        exclude = ['user', ]
+        exclude = [
+            "user",
+        ]
 
 
 class RechargeableCardSerializer(ModelSerializer):
@@ -44,10 +46,12 @@ class RechargeableCardSerializer(ModelSerializer):
 
     class Meta:
         model = RechargeableCard
-        exclude = ['user', ]
+        exclude = [
+            "user",
+        ]
 
 
 class CarouselFigureSerializer(ModelSerializer):
     class Meta:
         model = CarouselFigure
-        fields = ['id', 'image', 'link']
+        fields = ["id", "image", "link"]

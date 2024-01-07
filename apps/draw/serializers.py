@@ -6,33 +6,46 @@
 # @file:serializers.py
 from rest_framework import serializers
 
-from apps.draw.models import PromptAssistant, DrawConfig, Styles, Loras, DrawHistory, UserLike, UserComment
+from apps.draw.models import (
+    PromptAssistant,
+    DrawConfig,
+    Styles,
+    Loras,
+    DrawHistory,
+    UserLike,
+    UserComment,
+)
 from drf.serializers import ModelSerializer
 
 
 class DrawHistoryImageSerializer(ModelSerializer):
     class Meta:
         model = DrawHistory
-        fields = ('image',)
+        fields = ("image",)
         ref_name = "DrawHistoryImage"
 
 
 class PromptAssistantSerializer(ModelSerializer):
     class Meta:
         model = PromptAssistant
-        exclude = ('id',)
+        exclude = ("id",)
 
 
 class StylesSerializer(ModelSerializer):
     class Meta:
         model = Styles
-        exclude = ('sort', 'style')
+        exclude = ("sort", "style")
 
 
 class LorasSerializer(ModelSerializer):
     class Meta:
         model = Loras
-        fields = ["id", "name", "weight", "cover", ]
+        fields = [
+            "id",
+            "name",
+            "weight",
+            "cover",
+        ]
 
 
 class DrawHistorySerializer(ModelSerializer):
@@ -42,7 +55,10 @@ class DrawHistorySerializer(ModelSerializer):
 
     class Meta:
         model = DrawHistory
-        exclude = ("status", "user",)
+        exclude = (
+            "status",
+            "user",
+        )
         depth = 1
 
 
@@ -58,7 +74,12 @@ class UserCommentSerializer(ModelSerializer):
 
     class Meta:
         model = UserComment
-        fields = ("id", "content", "create_time", "is_author",)
+        fields = (
+            "id",
+            "content",
+            "create_time",
+            "is_author",
+        )
 
     def get_is_author(self, obj) -> bool:
         """

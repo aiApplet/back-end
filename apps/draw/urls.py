@@ -8,7 +8,7 @@ from django.urls import path
 from rest_framework import routers
 from apps.draw import views
 
-app_name = 'draw'
+app_name = "draw"
 router = routers.DefaultRouter()
 
 router.register("draw", views.DrawViewSet, basename="draw")
@@ -19,6 +19,11 @@ router.register("pictures", views.PicturesViewSet, basename="pictures")
 router.register("user_like", views.UserLikeViewSet, basename="user_like")
 router.register("user_comment", views.UserCommentViewSet, basename="user_comment")
 urlpatterns = [
-    path('random_prompts', views.RandomPromptViewSet.as_view(), name='random_prompts')
+    path("random_prompts", views.RandomPromptViewSet.as_view(), name="random_prompts"),
+    path(
+        "aliyun_oss_token",
+        views.AliyunOssTokenViewSet.as_view(),
+        name="aliyun_oss_token",
+    ),
 ]
 urlpatterns += router.urls

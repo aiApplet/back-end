@@ -7,13 +7,17 @@
 from rest_framework import routers
 from apps.user import views
 
-app_name = 'user'
+app_name = "user"
 router = routers.DefaultRouter()
 
 router.register("user", views.UserViewSet, basename="user")
 router.register("signin", views.SignInViewSet, basename="signin")
 router.register("account_record", views.AccountRecordViewSet, basename="account_record")
-router.register("rechargeable_card", views.RechargeableCardViewSet, basename="rechargeable_card")
-router.register("carousel_figure", views.CarouselFigureViewSet, basename="carousel_figure")
+router.register(
+    "rechargeable_card", views.RechargeableCardViewSet, basename="rechargeable_card"
+)
+router.register(
+    "carousel_figure", views.CarouselFigureViewSet, basename="carousel_figure"
+)
 
 urlpatterns = router.urls

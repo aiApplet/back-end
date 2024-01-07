@@ -10,11 +10,13 @@ from django.utils.encoding import force_str
 EXCEPTION_SYSTEM_ERROR = 10000
 EXCEPTION_PARAMETER_FORMAT_ERROR = 10001
 EXCEPTION_SERVER_IS_BUSY = 10002
+EXCEPTION_SERVER_NOT_ENABLE = 10003
 EXCEPTION_DATA_INCLUDE_INVALID_IDS = 10010
 
 ERROR_PHRASES = {
     EXCEPTION_PARAMETER_FORMAT_ERROR: "参数格式错误",
     EXCEPTION_SERVER_IS_BUSY: "服务器繁忙，请稍后再试",
+    EXCEPTION_SERVER_NOT_ENABLE: "服务未启用",
     EXCEPTION_DATA_INCLUDE_INVALID_IDS: "请求数据包含了无效的主键",
 }
 
@@ -35,7 +37,9 @@ class LoadAppExceptions:
         for item in cls.app_list:
             try:
                 module = importlib.import_module(f"apps.{item}.exceptions")
-                for item in inspect.getmembers(module, predicate=cls.get_valid_exception):
+                for item in inspect.getmembers(
+                    module, predicate=cls.get_valid_exception
+                ):
                     key, value = item
                     globals().update({key: value})
 

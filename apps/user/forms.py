@@ -24,7 +24,7 @@ class UserCreateForms(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['code', 'parent_id']
+        fields = ["code", "parent_id"]
 
     @staticmethod
     def validate_code(value):
@@ -46,7 +46,7 @@ class UserCreateForms(ModelSerializer):
         return parent_user
 
     def create(self, validated_data):
-        user_data = validated_data.pop('code', None)
+        user_data = validated_data.pop("code", None)
         user, _ = User.objects.get_or_create(
             username=user_data["openid"], defaults={"password": make_password("123456")}
         )
@@ -67,7 +67,9 @@ class UserCreateForms(ModelSerializer):
 class SignInDateForms(ModelSerializer):
     class Meta:
         model = SignInDate
-        fields = ["user", ]
+        fields = [
+            "user",
+        ]
         extra_kwargs = {
             "user": {"read_only": True},
         }
@@ -96,12 +98,16 @@ class SignInDateForms(ModelSerializer):
 class RechargeableCardForms(ModelSerializer):
     class Meta:
         model = RechargeableCard
-        fields = ["card_number", ]
+        fields = [
+            "card_number",
+        ]
 
     @transaction.atomic
     def create(self, validated_data):
         ModelClass = self.Meta.model
-        instance = ModelClass._default_manager.filter(is_used=False, card_number=validated_data["card_number"]).first()
+        instance = ModelClass._default_manager.filter(
+            is_used=False, card_number=validated_data["card_number"]
+        ).first()
         instance.is_used = True
         instance.use_time = datetime.now()
         instance.save()

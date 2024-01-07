@@ -3,7 +3,14 @@ from django.db.models import ImageField
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
-from apps.draw.models import Styles, Loras, DrawConfig, DrawHistory, PromptAssistant, RandomPrompt
+from apps.draw.models import (
+    Styles,
+    Loras,
+    DrawConfig,
+    DrawHistory,
+    PromptAssistant,
+    RandomPrompt,
+)
 from utils.widget import CustomAdminFileWidget
 
 
@@ -11,19 +18,28 @@ from utils.widget import CustomAdminFileWidget
 
 
 class StylesAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'style', 'sort', ]
-    list_editable = ['sort', ]
+    list_display = [
+        "id",
+        "name",
+        "style",
+        "sort",
+    ]
+    list_editable = [
+        "sort",
+    ]
 
 
 class LorasAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'nickname', 'weight', 'cover_img', 'sort']
-    list_editable = ['sort', ]
+    list_display = ["id", "name", "nickname", "weight", "cover_img", "sort"]
+    list_editable = [
+        "sort",
+    ]
     formfield_overrides = {ImageField: {"widget": CustomAdminFileWidget}}
 
     def cover_img(self, obj):
         return format_html(
             '<img src="{}" style="max-width:200px; max-height:200px"/>'.format(
-                obj.cover.url
+                obj.cover
             )
         )
 
@@ -31,7 +47,15 @@ class LorasAdmin(admin.ModelAdmin):
 
 
 class DrawConfigAdmin(admin.ModelAdmin):
-    list_display = ['id', 'prompt', 'negative_prompt', 'width', 'height', 'seed', 'sampler_name']
+    list_display = [
+        "id",
+        "prompt",
+        "negative_prompt",
+        "width",
+        "height",
+        "seed",
+        "sampler_name",
+    ]
 
     def has_add_permission(self, request):
         return False
@@ -44,7 +68,7 @@ class DrawConfigAdmin(admin.ModelAdmin):
 
 
 class DrawHistoryAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user', 'status', 'front_cover_img_data']
+    list_display = ["id", "user", "status", "front_cover_img_data"]
     list_per_page = 10
 
     def front_cover_img_data(self, obj):
@@ -52,11 +76,11 @@ class DrawHistoryAdmin(admin.ModelAdmin):
         if obj.image:
             html = f"""
               <div style="position: relative">
-                <a href="{obj.image.url}" target="_blank">
-                  <img src="{obj.image.url}" width="100%" height="100%"> 
+                <a href="{obj.image}" target="_blank">
+                  <img src="{obj.image}" width="100%" height="100%"> 
                 </a>
                 <div style="position: absolute; top: 0; left: 0; display: none;" class="zoom-img">
-                  <img src="{obj.image.url}">
+                  <img src="{obj.image}">
                   <div 
                     style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; cursor: zoom-out;" 
                     onclick="this.parentElement.style.display='none'">
@@ -80,11 +104,17 @@ class DrawHistoryAdmin(admin.ModelAdmin):
 
 
 class PromptAssistantAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', ]
+    list_display = [
+        "id",
+        "name",
+    ]
 
 
 class RandomPromptAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', ]
+    list_display = [
+        "id",
+        "name",
+    ]
 
 
 admin.site.register(Styles, StylesAdmin)

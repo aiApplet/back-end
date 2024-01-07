@@ -13,9 +13,9 @@ class CustomAdminFileWidget(AdminFileWidget):
         result = []
         if hasattr(value, "url"):
             result.append(
-                f"""<a href="{value.url}" target="_blank">
+                f"""<a href="{value}" target="_blank">
                       <img 
-                        src="{value.url}" alt="{value}" 
+                        src="{value}" alt="{value}" 
                         width="200" height="200"
                         style="object-fit: cover;"
                       />

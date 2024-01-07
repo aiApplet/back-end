@@ -5,8 +5,15 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin, GroupAdmin
 from django.db.models import ImageField
 from django.utils.html import format_html
 
-from apps.user.models import GroupProxy, User, PermissionProxy, AccountRecord, SignInDate, RechargeableCard, \
-    CarouselFigure
+from apps.user.models import (
+    GroupProxy,
+    User,
+    PermissionProxy,
+    AccountRecord,
+    SignInDate,
+    RechargeableCard,
+    CarouselFigure,
+)
 from utils.widget import CustomAdminFileWidget
 
 
@@ -46,9 +53,9 @@ class UserAdmin(BaseUserAdmin):
 
 # Define the admin class
 class PermissionAdmin(admin.ModelAdmin):
-    list_display = ['name', 'codename']  # or any other fields you wish to display
-    fields = ['name', 'codename', 'content_type']  # Detail view configuration
-    search_fields = ['name', 'codename']  # Optional: to add a search box
+    list_display = ["name", "codename"]  # or any other fields you wish to display
+    fields = ["name", "codename", "content_type"]  # Detail view configuration
+    search_fields = ["name", "codename"]  # Optional: to add a search box
 
 
 # Register the admin class with the associated model
@@ -64,46 +71,65 @@ admin.site.unregister(Group)
 
 
 class AccountRecordAdmin(admin.ModelAdmin):
-    list_display = ['user', 'amount', 'balance', 'create_time', 'record_type', 'reward_type', 'remark', ]
-    search_fields = ['user__id', 'user__nickname']
-    list_filter = ['create_time', 'record_type', 'reward_type']
-    readonly_fields = ['user']
+    list_display = [
+        "user",
+        "amount",
+        "balance",
+        "create_time",
+        "record_type",
+        "reward_type",
+        "remark",
+    ]
+    search_fields = ["user__id", "user__nickname"]
+    list_filter = ["create_time", "record_type", "reward_type"]
+    readonly_fields = ["user"]
 
 
 admin.site.register(AccountRecord, AccountRecordAdmin)
 
 
 class SignInDateAdmin(admin.ModelAdmin):
-    list_display = ['user', 'date']
-    search_fields = ['user__id', 'user__nickname']
-    list_filter = ['date', ]
-    readonly_fields = ['user']
+    list_display = ["user", "date"]
+    search_fields = ["user__id", "user__nickname"]
+    list_filter = [
+        "date",
+    ]
+    readonly_fields = ["user"]
 
 
 admin.site.register(SignInDate, SignInDateAdmin)
 
 
 class RechargeableCardAdmin(admin.ModelAdmin):
-    list_display = ['card_number', 'amount', 'is_used', 'create_time', 'use_time', 'user']
-    search_fields = ['card_number', 'user__nickname', 'user__nickname']
-    list_filter = ['create_time', 'is_used', 'amount']
-    readonly_fields = ['user']
+    list_display = [
+        "card_number",
+        "amount",
+        "is_used",
+        "create_time",
+        "use_time",
+        "user",
+    ]
+    search_fields = ["card_number", "user__nickname", "user__nickname"]
+    list_filter = ["create_time", "is_used", "amount"]
+    readonly_fields = ["user"]
 
 
 admin.site.register(RechargeableCard, RechargeableCardAdmin)
 
 
 class CarouselFigureAdmin(admin.ModelAdmin):
-    list_display = ['id', 'link', 'image_img', 'create_time', 'sort', 'is_show']
-    search_fields = ['link', ]
-    list_filter = ['create_time', 'is_show']
-    list_editable = ['is_show', 'sort']
+    list_display = ["id", "link", "image_img", "create_time", "sort", "is_show"]
+    search_fields = [
+        "link",
+    ]
+    list_filter = ["create_time", "is_show"]
+    list_editable = ["is_show", "sort"]
     formfield_overrides = {ImageField: {"widget": CustomAdminFileWidget}}  # Here
 
     def image_img(self, obj):
         return format_html(
             '<img src="{}" style="max-width:200px; max-height:200px"/>'.format(
-                obj.image.url
+                obj.image
             )
         )
 
