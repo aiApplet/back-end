@@ -22,7 +22,7 @@ class UserViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.UpdateM
         """
         实例化和返回此视图所需的权限列表。
         """
-        if self.action == 'create':
+        if self.action in ['create', 'sign_in']:
             # 如果是 create 操作，则不需要特定权限
             permission_classes = []
         else:
