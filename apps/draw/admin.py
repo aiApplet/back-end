@@ -53,7 +53,7 @@ class DrawHistoryAdmin(admin.ModelAdmin):
             html = f"""
               <div style="position: relative">
                 <a href="{obj.image.url}" target="_blank">
-                  <img src="{obj.image.url}" width="800" height="500"> 
+                  <img src="{obj.image.url}" width="100%" height="100%"> 
                 </a>
                 <div style="position: absolute; top: 0; left: 0; display: none;" class="zoom-img">
                   <img src="{obj.image.url}">
