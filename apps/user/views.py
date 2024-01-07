@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 
 from apps.user import serializers, forms
@@ -40,6 +41,14 @@ class UserViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, mixins.UpdateM
         serializer.is_valid(raise_exception=True)
         instance = self.perform_create(serializer)
         return success_response(instance)
+
+    @action(methods=['post'], detail=False)
+    def sign_in(self, request, *args, **kwargs):
+        """登录（测试用）"""
+        from rest_framework_simplejwt.tokens import RefreshToken
+        user = User.objects.first()
+        refresh = RefreshToken.for_user(user)
+        return success_response({"token": str(refresh.access_token)})
 
 
 class SignInViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
