@@ -6,7 +6,7 @@
 # @file:serializers.py
 from rest_framework import serializers
 
-from apps.user.models import User, AccountRecord, RechargeableCard
+from apps.user.models import User, AccountRecord, RechargeableCard, CarouselFigure
 from drf.serializers import ModelSerializer
 
 
@@ -45,3 +45,9 @@ class RechargeableCardSerializer(ModelSerializer):
     class Meta:
         model = RechargeableCard
         exclude = ['user', ]
+
+
+class CarouselFigureSerializer(ModelSerializer):
+    class Meta:
+        model = CarouselFigure
+        fields = ['id', 'image', 'link']

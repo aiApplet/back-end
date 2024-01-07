@@ -28,7 +28,7 @@ class DrawConfigCreateForms(ModelSerializer):
         exclude = ["id", "config", "sampler_name"]
         extra_kwargs = {
             "negative_prompt": {"required": False, "default": ""},
-            "seed": {"required": False, },
+            "seed": {"required": False, "default": "-1"},
             "lora": {"required": False, },
         }
 
@@ -44,7 +44,7 @@ class DrawConfigCreateForms(ModelSerializer):
         validated_data["config"] = {
             "prompt": prompt,
             "negative_prompt": validated_data['negative_prompt'],
-            "seed": validated_data['seed'] or "-1",
+            "seed": validated_data['seed'],
             "sampler_name": validated_data["sampler_name"],
             "cfg_scale": 2,
             "height": validated_data['height'],

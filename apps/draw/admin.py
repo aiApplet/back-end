@@ -1,7 +1,10 @@
 from django.contrib import admin
+from django.db.models import ImageField
 from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 
 from apps.draw.models import Styles, Loras, DrawConfig, DrawHistory, PromptAssistant, RandomPrompt
+from utils.widget import CustomAdminFileWidget
 
 
 # Register your models here.
@@ -15,6 +18,7 @@ class StylesAdmin(admin.ModelAdmin):
 class LorasAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'nickname', 'weight', 'cover_img', 'sort']
     list_editable = ['sort', ]
+    formfield_overrides = {ImageField: {"widget": CustomAdminFileWidget}}
 
     def cover_img(self, obj):
         return format_html(
@@ -40,7 +44,30 @@ class DrawConfigAdmin(admin.ModelAdmin):
 
 
 class DrawHistoryAdmin(admin.ModelAdmin):
-    list_display = ['id', 'user', 'status', 'image']
+    list_display = ['id', 'user', 'status', 'front_cover_img_data']
+    list_per_page = 10
+
+    def front_cover_img_data(self, obj):
+        html = ""
+        if obj.image:
+            html = f"""
+              <div style="position: relative">
+                <a href="{obj.image.url}" target="_blank">
+                  <img src="{obj.image.url}" width="800" height="500"> 
+                </a>
+                <div style="position: absolute; top: 0; left: 0; display: none;" class="zoom-img">
+                  <img src="{obj.image.url}">
+                  <div 
+                    style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; cursor: zoom-out;" 
+                    onclick="this.parentElement.style.display='none'">
+                  </div>
+                </div>
+              </div>
+            """
+
+        return mark_safe(html)
+
+    front_cover_img_data.short_description = "图片"
 
     def has_add_permission(self, request):
         return False

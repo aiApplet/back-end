@@ -50,7 +50,6 @@ class AccountRecord(models.Model):
     reward_type = models.PositiveSmallIntegerField(verbose_name="收支分类", choices=const.RewardTypeChoices.choices)
     remark = models.CharField(max_length=255, null=True, blank=True, verbose_name="备注")
 
-
     class Meta:
         db_table = "account_record"
         verbose_name = "账户记录"
@@ -81,3 +80,18 @@ class RechargeableCard(models.Model):
         db_table = "rechargeable_card"
         verbose_name = "充值卡"
         verbose_name_plural = verbose_name
+
+
+class CarouselFigure(models.Model):
+    image = models.ImageField(upload_to='carousel/', verbose_name='图片')
+    link = models.CharField(max_length=255, verbose_name='链接')
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
+    sort = models.PositiveSmallIntegerField(default=0, verbose_name='排序')
+    is_show = models.BooleanField(default=True, verbose_name='是否显示')
+
+    class Meta:
+        db_table = 'carousel_figure'
+        verbose_name = '轮播图'
+        verbose_name_plural = verbose_name
+        ordering = ['-sort', '-id']
+

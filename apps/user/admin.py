@@ -2,8 +2,12 @@ from django.contrib import admin
 
 # Register your models here.
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin, GroupAdmin
+from django.db.models import ImageField
+from django.utils.html import format_html
 
-from apps.user.models import GroupProxy, User, PermissionProxy, AccountRecord, SignInDate, RechargeableCard
+from apps.user.models import GroupProxy, User, PermissionProxy, AccountRecord, SignInDate, RechargeableCard, \
+    CarouselFigure
+from utils.widget import CustomAdminFileWidget
 
 
 # 定义一个新的UserAdmin
@@ -87,3 +91,23 @@ class RechargeableCardAdmin(admin.ModelAdmin):
 
 
 admin.site.register(RechargeableCard, RechargeableCardAdmin)
+
+
+class CarouselFigureAdmin(admin.ModelAdmin):
+    list_display = ['id', 'link', 'image_img', 'create_time', 'sort', 'is_show']
+    search_fields = ['link', ]
+    list_filter = ['create_time', 'is_show']
+    list_editable = ['is_show', 'sort']
+    formfield_overrides = {ImageField: {"widget": CustomAdminFileWidget}}  # Here
+
+    def image_img(self, obj):
+        return format_html(
+            '<img src="{}" style="max-width:200px; max-height:200px"/>'.format(
+                obj.image.url
+            )
+        )
+
+    image_img.short_description = "图片"
+
+
+admin.site.register(CarouselFigure, CarouselFigureAdmin)

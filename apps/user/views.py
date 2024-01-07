@@ -3,7 +3,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 
 from apps.user import serializers, forms
-from apps.user.models import User, SignInDate, AccountRecord, RechargeableCard
+from apps.user.models import User, SignInDate, AccountRecord, RechargeableCard, CarouselFigure
 from drf import mixins
 from drf import viewsets
 from drf.pagination import PageNumberPagination
@@ -84,3 +84,8 @@ class RechargeableCardViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, vi
         if self.action == "list":
             return super().get_queryset().filter(user=self.request.user)
         return super().get_queryset()
+
+
+class CarouselFigureViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    queryset = CarouselFigure.objects.filter(is_show=True)
+    serializer_class = serializers.CarouselFigureSerializer
