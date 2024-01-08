@@ -6,22 +6,45 @@
 # @file:serializers.py
 from rest_framework import serializers
 
+from apps.draw.const import DrawHistoryStatusChoices
+from apps.draw.models import DrawHistory
+from apps.user import const
 from apps.user.models import User, AccountRecord, RechargeableCard, CarouselFigure
 from drf.serializers import ModelSerializer
 
 
 class UserSerializer(ModelSerializer):
     is_nickname = serializers.SerializerMethodField(help_text="是否绑定微信昵称")
+    shares_count = serializers.SerializerMethodField(help_text="分享次数")
+    draw_count = serializers.SerializerMethodField(help_text="绘图次数")
 
     class Meta:
         model = User
-        fields = ["id", "nickname", "avatar", "balance", "is_nickname"]
+        fields = ["id", "nickname", "avatar", "balance", "is_nickname", "shares_count", "draw_count"]
         extra_kwargs = {
             "balance": {"read_only": True},
         }
 
     def get_is_nickname(self, obj) -> bool:
         return obj.nickname[:2] != "游客"
+
+    def get_shares_count(self, obj) -> int:
+        return AccountRecord.objects.filter(user=obj, reward_type=const.RewardTypeChoices.SHARE.value).count()
+
+    def get_draw_count(self, obj) -> int:
+        return DrawHistory.objects.filter(user=obj, status=DrawHistoryStatusChoices.SUCCESS.value).count()
+
+
+class RechargeableCardSerializer(ModelSerializer):
+    class Meta:
+        model = RechargeableCard
+        fields = ["id", "name", "price", "image", "description"]
+
+
+class CarouselFigureSerializer(ModelSerializer):
+    class Meta:
+        model = CarouselFigure
+        fields = ["id", "image", "url"]
 
     def update(self, instance, validated_data):
         instance.nickname = validated_data.get("nickname", instance.nickname)
