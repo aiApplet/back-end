@@ -60,7 +60,6 @@ THIRD_PARTY_APPS = [
     "django_filters",
     "rest_framework_simplejwt",
     "drf_spectacular",
-    # "django_cleanup.apps.CleanupConfig",
 ]
 
 THIRD_PARTY_LOCAL_DEV_APPS = [

@@ -79,6 +79,7 @@ class SignInDateForms(ModelSerializer):
         user = self.context["request"].user
         if SignInDate.objects.filter(user=user, date=timezone.now().date()).exists():
             raise serializers.ValidationError("你今天已经签到了。")
+        return attrs
 
     @transaction.atomic
     def create(self, validated_data):
