@@ -4,12 +4,13 @@
 # @email:anningforchina@gmail.com
 # @time:2024/01/01 00:11
 # @file:serializers.py
+from django.utils import timezone
 from rest_framework import serializers
 
 from apps.draw.const import DrawHistoryStatusChoices
 from apps.draw.models import DrawHistory
 from apps.user import const
-from apps.user.models import User, AccountRecord, RechargeableCard, CarouselFigure
+from apps.user.models import User, AccountRecord, RechargeableCard, CarouselFigure, SignInDate
 from drf.serializers import ModelSerializer
 
 
@@ -17,6 +18,7 @@ class UserSerializer(ModelSerializer):
     is_nickname = serializers.SerializerMethodField(help_text="是否绑定微信昵称")
     shares_count = serializers.SerializerMethodField(help_text="分享次数")
     draw_count = serializers.SerializerMethodField(help_text="绘图次数")
+    sign_in = serializers.SerializerMethodField(help_text="签到状态")
 
     class Meta:
         model = User
@@ -34,23 +36,8 @@ class UserSerializer(ModelSerializer):
     def get_draw_count(self, obj) -> int:
         return DrawHistory.objects.filter(user=obj, status=DrawHistoryStatusChoices.SUCCESS.value).count()
 
-
-class RechargeableCardSerializer(ModelSerializer):
-    class Meta:
-        model = RechargeableCard
-        fields = ["id", "name", "price", "image", "description"]
-
-
-class CarouselFigureSerializer(ModelSerializer):
-    class Meta:
-        model = CarouselFigure
-        fields = ["id", "image", "url"]
-
-    def update(self, instance, validated_data):
-        instance.nickname = validated_data.get("nickname", instance.nickname)
-        instance.avatar = validated_data.get("avatar", instance.avatar)
-        instance.save()
-        return instance
+    def get_sign_in(self, obj) -> bool:
+        return not SignInDate.objects.filter(user=obj, date=timezone.now().date()).exists()
 
 
 class AccountRecordSerializer(ModelSerializer):
