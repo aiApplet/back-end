@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django_filters.rest_framework import DjangoFilterBackend
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
@@ -69,6 +69,9 @@ class AliyunOssTokenViewSet(APIView):
     @extend_schema(
         tags=["阿里云配置"],
         summary="获取阿里云配置，用于上传阿里云。需要参数secret_key，使用SHA256加密微信小程序appid",
+        parameters=[
+            OpenApiParameter("secret_key", description="SHA256加密微信小程序appid", required=True, type=str),
+        ],
         description="""
             {
                 "accessid": "",
