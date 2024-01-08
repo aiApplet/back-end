@@ -22,7 +22,7 @@ class UserSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["id", "nickname", "avatar", "balance", "is_nickname", "shares_count", "draw_count"]
+        fields = ["id", "nickname", "avatar", "balance", "is_nickname", "shares_count", "draw_count", "sign_in"]
         extra_kwargs = {
             "balance": {"read_only": True},
         }
