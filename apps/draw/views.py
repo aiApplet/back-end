@@ -115,7 +115,7 @@ class PicturesViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets
     retrieve_serializer_class = serializers.DrawHistoryRetrieveSerializer
     pagination_class = PageNumberPagination
     filterset_fields = [
-        "config__style",
+        "config__style", "user"
     ]
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     ordering_fields = ["create_time", "like_count", "comment_count"]  # 可以排序的字段
