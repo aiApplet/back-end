@@ -1,5 +1,7 @@
+from django.conf import settings
 from django.contrib import admin
 from django.db.models import ImageField
+from django.db.models.signals import pre_delete
 from django.utils.html import format_html
 from django.utils.safestring import mark_safe
 
@@ -9,8 +11,8 @@ from apps.draw.models import (
     DrawConfig,
     DrawHistory,
     PromptAssistant,
-    RandomPrompt,
 )
+from utils.aliyun import delete_image
 from utils.widget import CustomAdminFileWidget
 
 
@@ -44,6 +46,13 @@ class LorasAdmin(admin.ModelAdmin):
         )
 
     cover_img.short_description = "封面图"
+
+    def delete_queryset(self, request, queryset):
+        """Since django's default batch deletion does not trigger the model's delete method and signal, we need to redo this method."""
+        for query in queryset:
+            delete_image(query.image.name.replace(settings.ALIYUN_OSS_CONFIG["host"], ''))
+        pre_delete.send(sender=queryset[0].__class__, instance=queryset[0])
+        queryset.delete()
 
 
 class DrawConfigAdmin(admin.ModelAdmin):
@@ -110,16 +119,8 @@ class PromptAssistantAdmin(admin.ModelAdmin):
     ]
 
 
-class RandomPromptAdmin(admin.ModelAdmin):
-    list_display = [
-        "id",
-        "name",
-    ]
-
-
 admin.site.register(Styles, StylesAdmin)
 admin.site.register(Loras, LorasAdmin)
 admin.site.register(DrawConfig, DrawConfigAdmin)
 admin.site.register(DrawHistory, DrawHistoryAdmin)
 admin.site.register(PromptAssistant, PromptAssistantAdmin)
-# admin.site.register(RandomPrompt, RandomPromptAdmin)

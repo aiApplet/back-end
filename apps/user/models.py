@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.conf import settings
 
 from apps.user import const
-from utils.aliyun import upload_image
+from utils.aliyun import upload_image, delete_image
 
 
 # Create your models here.
@@ -26,7 +26,7 @@ class User(AbstractUser):
 
     def save(self, *args, **kwargs):
         if not self.nickname:
-            self.nickname = f"游客{self.id}"
+            self.nickname = "游客"
         super().save(*args, **kwargs)
 
 
@@ -110,14 +110,22 @@ class CarouselFigure(models.Model):
         ordering = ["-sort", "-id"]
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         self.image = upload_image(
             f"media/carousel/{self.image.name}", self.image.read()
         )
+        if self.pk:
+            old_instance = type(self).objects.get(pk=self.pk)
+            if old_instance.image != self.image:
+                delete_image(old_instance.image.name.replace(settings.ALIYUN_OSS_CONFIG["host"], ''))
         return super().save(
             force_insert=force_insert,
             force_update=force_update,
             using=using,
             update_fields=update_fields,
         )
+
+    def delete(self, using=None, keep_parents=False):
+        delete_image(self.image.name.replace(settings.ALIYUN_OSS_CONFIG["host"], ''))
+        return super().delete(using=using, keep_parents=keep_parents)

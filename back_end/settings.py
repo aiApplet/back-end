@@ -71,17 +71,17 @@ if DEBUG:
     THIRD_PARTY_APPS += THIRD_PARTY_LOCAL_DEV_APPS
 
 INSTALLED_APPS = (
-    [
-        "simpleui",
-        "django.contrib.admin",
-        "django.contrib.auth",
-        "django.contrib.contenttypes",
-        "django.contrib.sessions",
-        "django.contrib.messages",
-        "django.contrib.staticfiles",
-    ]
-    + MY_APPS
-    + THIRD_PARTY_APPS
+        [
+            "simpleui",
+            "django.contrib.admin",
+            "django.contrib.auth",
+            "django.contrib.contenttypes",
+            "django.contrib.sessions",
+            "django.contrib.messages",
+            "django.contrib.staticfiles",
+        ]
+        + MY_APPS
+        + THIRD_PARTY_APPS
 )
 
 MIDDLEWARE = [
@@ -124,8 +124,14 @@ CACHES = {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": env("REDIS_LOCATION"),
         "OPTIONS": {
+            "db": "1",
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "MAX_ENTRIES": 100
         },
+        "TIMEOUT": 60,
+        "KEY_PREFIX": "AI-APPLET",
+        "VERSION": 1.0,
+        "KEY_FUNCTION": "utils.utils.make_key",
     },
 }
 
@@ -228,3 +234,4 @@ ALIYUN_OSS_CONFIG = {
     "cdn_media_host": env("ALIYUN_CDN_MEDIA_HOST"),
 }
 ALIYUN_OSS_ENABLE = True
+LOCAL_HOST = f"127.0.0.1:{8000 if DEBUG else 9999}"

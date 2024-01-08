@@ -2,6 +2,8 @@ import base64
 
 from django.conf import settings
 from django.shortcuts import render
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from rest_framework.filters import OrderingFilter
@@ -46,6 +48,10 @@ class PromptsViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = PromptAssistant.objects.all()
     serializer_class = serializers.PromptAssistantSerializer
 
+    @method_decorator(cache_page(3600 * 24))  # 缓存1天
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
 
 class RandomPromptViewSet(APIView):
     queryset = RandomPrompt.objects.all()
@@ -82,22 +88,31 @@ class AliyunOssTokenViewSet(APIView):
 
 
 class StylesViewSet(
-    mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
+    mixins.ListModelMixin, viewsets.GenericViewSet
 ):
     queryset = Styles.objects.all()
     serializer_class = serializers.StylesSerializer
 
+    @method_decorator(cache_page(60 * 60))  # 缓存1小时
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
 
 class LorasViewSet(
-    mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
+    mixins.ListModelMixin, viewsets.GenericViewSet
 ):
     queryset = Loras.objects.all()
     serializer_class = serializers.LorasSerializer
 
+    @method_decorator(cache_page(60 * 60))  # 缓存1小时
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
-class PicturesViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+
+class PicturesViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
     queryset = DrawHistory.objects.all()
     serializer_class = serializers.DrawHistorySerializer
+    retrieve_serializer_class = serializers.DrawHistoryRetrieveSerializer
     pagination_class = PageNumberPagination
     filterset_fields = [
         "config__style",

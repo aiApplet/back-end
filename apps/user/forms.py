@@ -5,6 +5,7 @@
 # @time:2024/01/01 00:12
 # @file:forms.py
 from datetime import datetime
+from django.utils import timezone
 
 from django.contrib.auth.hashers import make_password
 from django.db import transaction
@@ -76,7 +77,7 @@ class SignInDateForms(ModelSerializer):
 
     def validate(self, attrs):
         user = self.context["request"].user
-        if SignInDate.objects.filter(user=user, date=datetime.date.today()).exists():
+        if SignInDate.objects.filter(user=user, date=timezone.now().date()).exists():
             raise serializers.ValidationError("你今天已经签到了。")
 
     @transaction.atomic

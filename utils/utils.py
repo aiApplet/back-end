@@ -31,3 +31,8 @@ def random_name():
 
 def local_timestamp():
     return arrow.utcnow().to("Asia/Shanghai").timestamp()
+
+
+def make_key(key, key_prefix, version):
+    return ":".join([key_prefix, str(version), key])
+

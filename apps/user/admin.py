@@ -1,8 +1,10 @@
+from django.conf import settings
 from django.contrib import admin
 
 # Register your models here.
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin, GroupAdmin
 from django.db.models import ImageField
+from django.db.models.signals import pre_delete
 from django.utils.html import format_html
 
 from apps.user.models import (
@@ -14,6 +16,7 @@ from apps.user.models import (
     RechargeableCard,
     CarouselFigure,
 )
+from utils.aliyun import delete_image
 from utils.widget import CustomAdminFileWidget
 
 
@@ -134,6 +137,13 @@ class CarouselFigureAdmin(admin.ModelAdmin):
         )
 
     image_img.short_description = "图片"
+
+    def delete_queryset(self, request, queryset):
+        """Since django's default batch deletion does not trigger the model's delete method and signal, we need to redo this method."""
+        for query in queryset:
+            delete_image(query.image.name.replace(settings.ALIYUN_OSS_CONFIG["host"], ''))
+        pre_delete.send(sender=queryset[0].__class__, instance=queryset[0])
+        queryset.delete()
 
 
 admin.site.register(CarouselFigure, CarouselFigureAdmin)

@@ -1,8 +1,9 @@
+from django.conf import settings
 from django.db import models
 
 from apps.draw import const
 from apps.user.models import User
-from utils.aliyun import upload_image
+from utils.aliyun import upload_image, delete_image
 
 
 # Create your models here.
@@ -42,9 +43,15 @@ class Loras(models.Model):
         return self.name
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
-        self.cover = upload_image(f"media/lora/{self.cover.name}", self.cover.read())
+        self.cover = upload_image(
+            f"media/lora/{self.cover.name}", self.cover.read()
+        )
+        if self.pk:
+            old_instance = type(self).objects.get(pk=self.pk)
+            if old_instance.cover != self.cover:
+                delete_image(old_instance.cover.name.replace(settings.ALIYUN_OSS_CONFIG["host"], ''))
         return super().save(
             force_insert=force_insert,
             force_update=force_update,

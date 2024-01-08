@@ -1,4 +1,6 @@
 from django.shortcuts import render
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 
@@ -111,3 +113,7 @@ class RechargeableCardViewSet(
 class CarouselFigureViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = CarouselFigure.objects.filter(is_show=True)
     serializer_class = serializers.CarouselFigureSerializer
+
+    @method_decorator(cache_page(3600 * 24))  # 缓存24小时
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)

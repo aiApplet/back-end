@@ -94,3 +94,9 @@ def upload_image(image_name, image_data):
         aliyun.INTERNAL = False
     aliyun.bucket.put_object(image_name, image_data)
     return settings.ALIYUN_OSS_CONFIG["host"] + image_name
+
+
+def delete_image(image_name):
+    if not settings.DEBUG:
+        aliyun.INTERNAL = False
+    aliyun.bucket.delete_object(image_name)
