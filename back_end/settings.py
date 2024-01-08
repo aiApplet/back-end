@@ -167,7 +167,7 @@ MEDIA_URL = "/media/"
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-DEFAULT_AVATAR = "https://ai.xiazq.com/media/avatar/avatar.jpg"
+DEFAULT_AVATAR = "https://ai-media.xiazq.com/media/avatar.jpg"
 AUTH_USER_MODEL = "user.User"
 
 REST_FRAMEWORK = {
