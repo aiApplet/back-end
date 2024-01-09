@@ -146,7 +146,7 @@ class PromptAssistant(models.Model):
     class Meta:
         verbose_name = "提示词助手"
         verbose_name_plural = verbose_name
-        ordering = ["-id"]
+        ordering = ["id"]
 
     def __str__(self):
         return self.name
