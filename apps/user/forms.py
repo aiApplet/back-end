@@ -110,6 +110,8 @@ class RechargeableCardForms(ModelSerializer):
         instance = ModelClass._default_manager.filter(
             is_used=False, card_number=validated_data["card_number"]
         ).first()
+        if not instance:
+            raise serializers.ValidationError("无效的充值卡")
         instance.is_used = True
         instance.use_time = datetime.now()
         instance.save()

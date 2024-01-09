@@ -115,7 +115,7 @@ class UserLikeForm(ModelSerializer):
             draw_history=attrs["draw_history"],
             create_time__day=now.today(),
         ).exists():
-            serializers.ValidationError("今日已经点过赞了，请明天再来。")
+            raise serializers.ValidationError("今日已经点过赞了，请明天再来。")
         return attrs
 
     @transaction.atomic
@@ -141,7 +141,7 @@ class UserCommentForm(ModelSerializer):
             ).count()
             > 5
         ):
-            serializers.ValidationError("您今天已经评论过5次了，禁止再评论。")
+            raise serializers.ValidationError("您今天已经评论过5次了，禁止再评论。")
         return attrs
 
     @transaction.atomic
