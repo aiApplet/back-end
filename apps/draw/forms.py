@@ -25,6 +25,8 @@ from utils.utils import random_name
 
 
 class DrawConfigCreateForms(ModelSerializer):
+    # tag = serializers.CharField(required=False, help_text="标签（头像=avatar）")
+
     class Meta:
         model = DrawConfig
         exclude = ["id", "config", "sampler_name"]
@@ -52,7 +54,7 @@ class DrawConfigCreateForms(ModelSerializer):
         if loras:
             for lora in loras:
                 lora_prompt += f"<lora:{lora.nickname}:{lora.weight}>,"
-        prompt = f"{lora_prompt}{validated_data['style'].style}{validated_data['prompt']}{'' if validated_data['prompt'][-1] == ',' else ','}<lora:LCM:1>,"
+        prompt = f"{lora_prompt}{validated_data['style'].style}{validated_data['prompt']}{'' if validated_data['prompt'][-1] == ',' else ','}"
         validated_data["config"] = {
             "prompt": prompt,
             "negative_prompt": validated_data["negative_prompt"],
@@ -111,9 +113,9 @@ class UserLikeForm(ModelSerializer):
     def validate(self, attrs):
         now = datetime.now()
         if UserLike.objects.filter(
-            user=self.context["request"].user,
-            draw_history=attrs["draw_history"],
-            create_time__day=now.today(),
+                user=self.context["request"].user,
+                draw_history=attrs["draw_history"],
+                create_time__day=now.today(),
         ).exists():
             raise serializers.ValidationError("今日已经点过赞了，请明天再来。")
         return attrs
@@ -136,10 +138,10 @@ class UserCommentForm(ModelSerializer):
 
     def validate(self, attrs):
         if (
-            UserComment.objects.filter(
-                user=self.context["request"].user, draw_history=attrs["draw_history"]
-            ).count()
-            > 5
+                UserComment.objects.filter(
+                    user=self.context["request"].user, draw_history=attrs["draw_history"]
+                ).count()
+                > 5
         ):
             raise serializers.ValidationError("您今天已经评论过5次了，禁止再评论。")
         return attrs

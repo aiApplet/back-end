@@ -212,12 +212,12 @@ SHARE_NEW_USER = 1
 
 # stable diffusion 配置
 STABLE_DIFFUSION_CONFIG = {
-    "sd_model_checkpoint": "RealitiesEdgeXLLCM_TURBOXL.safetensors [c1d5646e8f]",
+    "sd_model_checkpoint": "LEOSAM HelloWorld 极速版Turbo+LCM_3.0 Turbo+LCM.safetensors [415add75ee]",
     "sd_vae": "Automatic",
     "steps": "8",
     "cfg_scale": "2",
     "seed": "-1",
-    "sampler_name": "LCM",
+    "sampler_name": "Euler a",
     "negative_prompt": "",
 }
 
