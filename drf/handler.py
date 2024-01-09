@@ -24,7 +24,11 @@ def exception_handler(exc, context):
         return business_exception_handler(exc, context)
 
     if isinstance(exc, ValidationError):
-        error_message = list(dict(exc.detail).values())[0]
+        try:
+            error_message = list(exc.detail.values())[0]
+        except:
+            error_message = exc.detail
+        # error_message = list(dict(exc.detail).values())[0]
         if isinstance(error_message, list):
             error_message = error_message[0]
         elif isinstance(error_message, dict):
