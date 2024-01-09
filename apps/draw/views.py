@@ -1,5 +1,3 @@
-import base64
-
 from django.conf import settings
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
@@ -10,7 +8,7 @@ from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
-from apps.draw import serializers, forms, const
+from apps.draw import serializers, forms
 from apps.draw.models import (
     DrawConfig,
     PromptAssistant,
@@ -21,7 +19,6 @@ from apps.draw.models import (
     UserLike,
     UserComment,
 )
-from apps.user.models import User
 from core import exceptions
 from core.exceptions import raise_business_exception
 from drf import mixins

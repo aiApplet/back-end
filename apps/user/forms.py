@@ -72,7 +72,7 @@ class SignInDateForms(ModelSerializer):
             "user",
         ]
         extra_kwargs = {
-            "user": {"read_only": True},
+            "user": {"required": False},
         }
 
     def validate(self, attrs):

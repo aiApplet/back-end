@@ -45,7 +45,7 @@ class PermissionProxy(Permission):
 
 
 class AccountRecord(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="用户")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="用户", unique=False)
     amount = models.PositiveIntegerField(default=0, verbose_name="金额")
     balance = models.PositiveIntegerField(verbose_name="余额")
     create_time = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
@@ -65,7 +65,7 @@ class AccountRecord(models.Model):
 
 
 class SignInDate(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="用户")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="用户", unique=False)
     date = models.DateField(auto_now_add=True, verbose_name="日期")
 
     class Meta:
