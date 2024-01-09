@@ -58,20 +58,6 @@ class DrawHistorySerializer(ModelSerializer):
         exclude = (
             "status",
             "user",
-            "config",
-        )
-
-
-class DrawHistoryRetrieveSerializer(ModelSerializer):
-    nickname = serializers.CharField(source="user.nickname", read_only=True)
-    avatar = serializers.CharField(source="user.avatar", read_only=True)
-    create_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
-
-    class Meta:
-        model = DrawHistory
-        exclude = (
-            "status",
-            "user",
         )
         depth = 1
 

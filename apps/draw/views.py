@@ -112,10 +112,9 @@ class LorasViewSet(
         return super().list(request, *args, **kwargs)
 
 
-class PicturesViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet):
+class PicturesViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = DrawHistory.objects.all()
     serializer_class = serializers.DrawHistorySerializer
-    retrieve_serializer_class = serializers.DrawHistoryRetrieveSerializer
     pagination_class = PageNumberPagination
     filterset_fields = [
         "config__style", "user"
