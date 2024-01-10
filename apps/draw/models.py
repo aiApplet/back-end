@@ -105,7 +105,7 @@ class DrawHistory(models.Model):
 class UserLike(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="用户")
     history = models.ForeignKey(
-        DrawHistory, on_delete=models.CASCADE, verbose_name="绘图历史"
+        DrawHistory, on_delete=models.CASCADE, verbose_name="绘图历史", related_name="history_set"
     )
     create_time = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
 

@@ -64,6 +64,7 @@ THIRD_PARTY_APPS = [
 
 THIRD_PARTY_LOCAL_DEV_APPS = [
     "django_extensions",
+    "silk",
 ]
 
 if DEBUG:
@@ -92,6 +93,8 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+if DEBUG:
+    MIDDLEWARE.append('silk.middleware.SilkyMiddleware')
 
 ROOT_URLCONF = "back_end.urls"
 
@@ -201,7 +204,7 @@ WE_CHAT = {
 CSRF_TRUSTED_ORIGINS = ["https://ai.xiazq.com"]
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10),
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=30),
 }
 
 # 奖励设置

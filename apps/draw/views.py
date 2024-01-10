@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.db.models import Prefetch
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -122,6 +123,12 @@ class PicturesViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     ordering_fields = ["create_time", "like_count", "comment_count"]  # 可以排序的字段
     ordering = ["-create_time"]  # 默认排序
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return super().get_queryset().select_related("config").prefetch_related(
+            Prefetch('config__style')
+        ).select_related("user").prefetch_related("history_set")
 
 
 class UserLikeViewSet(

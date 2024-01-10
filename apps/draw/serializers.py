@@ -48,10 +48,20 @@ class LorasSerializer(ModelSerializer):
         ]
 
 
+class DrawConfigTemplate(ModelSerializer):
+    style_name = serializers.CharField(source="style.name", read_only=True)
+
+    class Meta:
+        model = DrawConfig
+        exclude = ['config', 'lora']
+
+
 class DrawHistorySerializer(ModelSerializer):
     nickname = serializers.CharField(source="user.nickname", read_only=True)
     avatar = serializers.CharField(source="user.avatar", read_only=True)
     create_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
+    config = DrawConfigTemplate(read_only=True)
+    is_like = serializers.SerializerMethodField()
 
     class Meta:
         model = DrawHistory
@@ -59,7 +69,9 @@ class DrawHistorySerializer(ModelSerializer):
             "status",
             "user",
         )
-        depth = 1
+
+    def get_is_like(self, obj) -> bool:
+        return obj.history_set.exists()
 
 
 class UserLikeSerializer(ModelSerializer):
