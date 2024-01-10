@@ -5,6 +5,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema, OpenApiParameter
+from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
@@ -132,7 +133,7 @@ class PicturesViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
 
 class UserLikeViewSet(
-    mixins.CreateModelMixin, mixins.DestroyModelMixin, viewsets.GenericViewSet
+    mixins.CreateModelMixin, viewsets.GenericViewSet
 ):
     queryset = UserLike.objects.all()
     serializer_class = serializers.UserLikeSerializer
@@ -142,6 +143,24 @@ class UserLikeViewSet(
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
         return serializer.save()
+
+    @extend_schema(
+        tags=["用户点赞"],
+        summary="删除用户点赞对象",
+        parameters=[
+            OpenApiParameter("history", description="图片ID", required=True, type=str),
+        ],
+    )
+    @action(methods=["delete"], detail=False)
+    def delete(self, request, *args, **kwargs):
+        history = request.data.get("history", "")
+        if not history:
+            raise_business_exception(exceptions.EXCEPTION_PARAMETER_FORMAT_ERROR)
+        instance = self.get_queryset().filter(user=self.request.user, history=history).first()
+        if not instance:
+            raise_business_exception(exceptions.EXCEPTION_DATA_INCLUDE_INVALID_IDS)
+        instance.delete()
+        return success_response()
 
 
 class UserCommentViewSet(

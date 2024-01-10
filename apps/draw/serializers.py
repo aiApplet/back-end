@@ -83,12 +83,16 @@ class UserLikeSerializer(ModelSerializer):
 class UserCommentSerializer(ModelSerializer):
     create_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", read_only=True)
     is_author = serializers.SerializerMethodField()
+    nickname = serializers.CharField(source="user.nickname", read_only=True)
+    avatar = serializers.CharField(source="user.avatar", read_only=True)
 
     class Meta:
         model = UserComment
         fields = (
             "id",
             "content",
+            "nickname",
+            "avatar",
             "create_time",
             "is_author",
         )
