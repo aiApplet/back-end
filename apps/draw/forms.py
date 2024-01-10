@@ -12,6 +12,7 @@ from io import BytesIO
 from django.core.files import File
 from django.db import transaction
 from django.conf import settings
+from django.utils import timezone
 from rest_framework import serializers
 
 from apps.draw import const
@@ -111,11 +112,10 @@ class UserLikeForm(ModelSerializer):
         }
 
     def validate(self, attrs):
-        now = datetime.now()
         if UserLike.objects.filter(
                 user=self.context["request"].user,
-                draw_history=attrs["draw_history"],
-                create_time__day=now.today(),
+                history=attrs["history"],
+                create_time__date=timezone.now().date()
         ).exists():
             raise serializers.ValidationError("今日已经点过赞了，请明天再来。")
         return attrs
@@ -139,7 +139,7 @@ class UserCommentForm(ModelSerializer):
     def validate(self, attrs):
         if (
                 UserComment.objects.filter(
-                    user=self.context["request"].user, draw_history=attrs["draw_history"]
+                    user=self.context["request"].user, history=attrs["history"]
                 ).count()
                 > 5
         ):

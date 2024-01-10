@@ -141,6 +141,7 @@ class UserLikeViewSet(
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+        return serializer.save()
 
 
 class UserCommentViewSet(
@@ -160,3 +161,4 @@ class UserCommentViewSet(
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+        return serializer.save()
