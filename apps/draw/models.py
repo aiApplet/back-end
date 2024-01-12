@@ -7,6 +7,37 @@ from utils.aliyun import upload_image, delete_image
 
 
 # Create your models here.
+class Machines(models.Model):
+    name = models.CharField(max_length=100, default="", verbose_name="机器名称")
+    agreement = models.BooleanField(default=True, choices=((True, "http"), (False, "https")), verbose_name="传输协议")
+    ip = models.CharField(max_length=40, default="", verbose_name="机器IP")
+    post = models.CharField(max_length=10, default="", verbose_name="机器端口")
+    enabled = models.BooleanField(default=True, verbose_name="是否启用")
+
+    class Meta:
+        verbose_name = "机器管理"
+        verbose_name_plural = verbose_name
+        ordering = ["-id"]
+
+    def __str__(self):
+        return self.name
+
+
+class MachineLogs(models.Model):
+    machine = models.ForeignKey(Machines, on_delete=models.CASCADE, verbose_name="机器")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="用户")
+    create_time = models.DateTimeField(auto_now_add=True, verbose_name="使用时间")
+    config = models.ForeignKey("draw.DrawConfig", on_delete=models.CASCADE, verbose_name="配置")
+    total_time = models.CharField(max_length=20, default="", verbose_name="耗费时间")
+    remark = models.TextField(default="", verbose_name="备注")
+
+    class Meta:
+        verbose_name = "机器日志"
+        verbose_name_plural = verbose_name
+        ordering = ["-id"]
+
+    def __str__(self):
+        return self.remark
 
 
 class Styles(models.Model):
@@ -43,7 +74,7 @@ class Loras(models.Model):
         return self.name
 
     def save(
-        self, force_insert=False, force_update=False, using=None, update_fields=None
+            self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         self.cover = upload_image(f"media/lora/{self.cover.name}", self.cover.read())
         if self.pk:
@@ -94,6 +125,8 @@ class DrawHistory(models.Model):
     create_time = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
     like_count = models.PositiveIntegerField(default=0, verbose_name="点赞数")
     comment_count = models.PositiveIntegerField(default=0, verbose_name="评论数")
+    audit = models.BooleanField(default=False, verbose_name="审核通过")
+    audit_txt = models.CharField(default="", max_length=255, verbose_name="审核备注")
 
     class Meta:
         verbose_name = "绘图历史"

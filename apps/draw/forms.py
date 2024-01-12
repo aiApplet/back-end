@@ -6,7 +6,6 @@
 # @file:forms.py
 import base64
 import json
-from datetime import datetime
 from io import BytesIO
 
 from django.core.files import File
@@ -21,12 +20,12 @@ from core import exceptions
 from core.exceptions import raise_business_exception
 from drf.serializers import ModelSerializer
 from utils.aliyun import upload_image
+from utils.content_detection import initiate_audit
 from utils.stable_diffusion import StableDiffusion
 from utils.utils import random_name
 
 
 class DrawConfigCreateForms(ModelSerializer):
-    # tag = serializers.CharField(required=False, help_text="标签（头像=avatar）")
 
     class Meta:
         model = DrawConfig
@@ -74,8 +73,9 @@ class DrawConfigCreateForms(ModelSerializer):
             },
         }
         instance = super().create(validated_data)
+
         result = StableDiffusion.generate_image(
-            "http://172.24.42.191:7860/sdapi/v1/txt2img", instance.config
+            "/sdapi/v1/txt2img", instance, self.context["request"].user
         )
         images = result.get("images", None)
         if not images:
@@ -97,6 +97,8 @@ class DrawConfigCreateForms(ModelSerializer):
             image=img_file,
             status=status,
         )
+        if settings.ENABLE_IMAGE_AUDIT:
+            initiate_audit(draw)
         seed = json.loads(result["info"])["seed"]
         instance.seed = seed
         instance.save()

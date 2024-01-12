@@ -234,6 +234,13 @@ ALIYUN_OSS_CONFIG = {
     "host": env("ALIYUN_HOST"),
     "cdn_static_host": env("ALIYUN_CDN_STATIC_HOST"),
     "cdn_media_host": env("ALIYUN_CDN_MEDIA_HOST"),
+    "audit_endpoint": "imm.cn-shenzhen.aliyuncs.com",
+    # imm 项目昵称
+    "project_name": "ai-applet",
 }
+# 是否开启OSS
 ALIYUN_OSS_ENABLE = True
+# 是否开启图片自动审核 调用阿里云图片检测
+ENABLE_IMAGE_AUDIT = False
 LOCAL_HOST = f"127.0.0.1:{8000 if DEBUG else 9999}"
+

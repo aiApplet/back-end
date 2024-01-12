@@ -8,3 +8,4 @@ class DrawConfig(AppConfig):
 
     def ready(self):
         import apps.draw.signals
+        import apps.draw.detector

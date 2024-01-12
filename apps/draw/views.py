@@ -28,6 +28,7 @@ from drf import viewsets
 from drf.pagination import PageNumberPagination
 from drf.response import success_response
 from utils.aliyun import aliyun
+from utils.content_detection import get_audit_results
 from utils.utils import random_dict_from_list, hash_encrypt
 
 
@@ -113,7 +114,7 @@ class LorasViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
 
 class PicturesViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
-    queryset = DrawHistory.objects.all()
+    queryset = DrawHistory.objects.filter(audit=True)
     serializer_class = serializers.DrawHistorySerializer
     pagination_class = PageNumberPagination
     filterset_fields = ["config__style", "user"]
@@ -123,6 +124,8 @@ class PicturesViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        if settings.ENABLE_IMAGE_AUDIT:
+            get_audit_results()
         return (
             super()
             .get_queryset()
