@@ -214,6 +214,8 @@ SIGN_IN_REWARD = 1
 SHARE_NEW_USER = 1
 # 单次生图花费
 GEN_IMAGE_COST = 1
+# 新用户注册送积分
+REGISTER_NEW_USER_REWARD = 20
 
 # stable diffusion 配置
 STABLE_DIFFUSION_CONFIG = {

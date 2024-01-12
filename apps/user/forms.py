@@ -46,6 +46,7 @@ class UserCreateForms(ModelSerializer):
             raise serializers.ValidationError("父用户不存在")
         return parent_user
 
+    @transaction.atomic
     def create(self, validated_data):
         user_data = validated_data.pop("code", None)
         user, _ = User.objects.get_or_create(
@@ -53,7 +54,18 @@ class UserCreateForms(ModelSerializer):
         )
         if _:
             parent_id = validated_data.get("parent_id")
+            user.balance += settings.REGISTER_NEW_USER_REWARD
+            user.save()
+            AccountRecord.objects.create(
+                user=user,
+                amount=settings.REGISTER_NEW_USER_REWARD,
+                balance=user.balance,
+                reward_type=const.RewardTypeChoices.NEW_USER_REGISTER.value,
+                remark=f"新用户注册赠送积分:{settings.REGISTER_NEW_USER_REWARD}",
+            )
             if parent_id:
+                parent_id.balance += settings.SHARE_NEW_USER
+                parent_id.save()
                 AccountRecord.objects.create(
                     user=parent_id,
                     amount=settings.SHARE_NEW_USER,

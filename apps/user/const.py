@@ -9,3 +9,4 @@ class RewardTypeChoices(IntegerChoices):
     SHARE = 1, "分享"
     RECHARGE = 2, "充值"
     DRAW = 3, "绘图"
+    NEW_USER_REGISTER = 4, "新用户注册"
