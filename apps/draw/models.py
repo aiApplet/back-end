@@ -43,15 +43,17 @@ class Loras(models.Model):
         return self.name
 
     def save(
-            self, force_insert=False, force_update=False, using=None, update_fields=None
+        self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
-        self.cover = upload_image(
-            f"media/lora/{self.cover.name}", self.cover.read()
-        )
+        self.cover = upload_image(f"media/lora/{self.cover.name}", self.cover.read())
         if self.pk:
             old_instance = type(self).objects.get(pk=self.pk)
             if old_instance.cover != self.cover:
-                delete_image(old_instance.cover.name.replace(settings.ALIYUN_OSS_CONFIG["host"], ''))
+                delete_image(
+                    old_instance.cover.name.replace(
+                        settings.ALIYUN_OSS_CONFIG["host"], ""
+                    )
+                )
         return super().save(
             force_insert=force_insert,
             force_update=force_update,
@@ -105,7 +107,10 @@ class DrawHistory(models.Model):
 class UserLike(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="用户")
     history = models.ForeignKey(
-        DrawHistory, on_delete=models.CASCADE, verbose_name="绘图历史", related_name="history_set"
+        DrawHistory,
+        on_delete=models.CASCADE,
+        verbose_name="绘图历史",
+        related_name="history_set",
     )
     create_time = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
 

@@ -18,10 +18,10 @@ from apps.draw.models import Styles, Loras, PromptAssistant
 @receiver(post_save, sender=Styles)
 @receiver(post_delete, sender=Styles)
 def clear_styles_cache(sender, **kwargs):
-    path = reverse('draw:styles-list')
+    path = reverse("draw:styles-list")
     request = HttpRequest()
     request.path = path
-    request.META['HTTP_HOST'] = settings.LOCAL_HOST
+    request.META["HTTP_HOST"] = settings.LOCAL_HOST
     key = _generate_cache_header_key("", request)
     cache.delete(key)
 
@@ -29,10 +29,10 @@ def clear_styles_cache(sender, **kwargs):
 @receiver(post_save, sender=Loras)
 @receiver(post_delete, sender=Loras)
 def clear_loras_cache(sender, **kwargs):
-    path = reverse('draw:loras-list')
+    path = reverse("draw:loras-list")
     request = HttpRequest()
     request.path = path
-    request.META['HTTP_HOST'] = settings.LOCAL_HOST
+    request.META["HTTP_HOST"] = settings.LOCAL_HOST
     key = _generate_cache_header_key("", request)
     cache.delete(key)
 
@@ -40,9 +40,9 @@ def clear_loras_cache(sender, **kwargs):
 @receiver(post_save, sender=PromptAssistant)
 @receiver(post_delete, sender=PromptAssistant)
 def clear_prompts_cache(sender, **kwargs):
-    path = reverse('draw:prompts-list')
+    path = reverse("draw:prompts-list")
     request = HttpRequest()
     request.path = path
-    request.META['HTTP_HOST'] = settings.LOCAL_HOST
+    request.META["HTTP_HOST"] = settings.LOCAL_HOST
     key = _generate_cache_header_key("", request)
     cache.delete(key)

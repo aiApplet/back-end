@@ -69,7 +69,9 @@ class AliyunOssTokenViewSet(APIView):
         tags=["阿里云配置"],
         summary="获取阿里云配置，用于上传阿里云。需要参数secret_key，使用SHA256加密微信小程序appid",
         parameters=[
-            OpenApiParameter("secret_key", description="SHA256加密微信小程序appid", required=True, type=str),
+            OpenApiParameter(
+                "secret_key", description="SHA256加密微信小程序appid", required=True, type=str
+            ),
         ],
         description="""
             {
@@ -92,9 +94,7 @@ class AliyunOssTokenViewSet(APIView):
         raise_business_exception(exceptions.EXCEPTION_SERVER_NOT_ENABLE, app="draw")
 
 
-class StylesViewSet(
-    mixins.ListModelMixin, viewsets.GenericViewSet
-):
+class StylesViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Styles.objects.all()
     serializer_class = serializers.StylesSerializer
 
@@ -103,9 +103,7 @@ class StylesViewSet(
         return super().list(request, *args, **kwargs)
 
 
-class LorasViewSet(
-    mixins.ListModelMixin, viewsets.GenericViewSet
-):
+class LorasViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = Loras.objects.all()
     serializer_class = serializers.LorasSerializer
 
@@ -118,23 +116,29 @@ class PicturesViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = DrawHistory.objects.all()
     serializer_class = serializers.DrawHistorySerializer
     pagination_class = PageNumberPagination
-    filterset_fields = [
-        "config__style", "user"
-    ]
+    filterset_fields = ["config__style", "user"]
     filter_backends = (DjangoFilterBackend, OrderingFilter)
     ordering_fields = ["create_time", "like_count", "comment_count"]  # 可以排序的字段
     ordering = ["-create_time"]  # 默认排序
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return super().get_queryset().select_related("config").prefetch_related(
-            Prefetch('config__style', queryset=UserLike.objects.filter(user=self.request.user))
-        ).select_related("user").prefetch_related("history_set")
+        return (
+            super()
+            .get_queryset()
+            .select_related("config")
+            .prefetch_related(Prefetch("config__style"))
+            .select_related("user")
+            .prefetch_related(
+                Prefetch(
+                    "history_set",
+                    queryset=UserLike.objects.filter(user=self.request.user),
+                )
+            )
+        )
 
 
-class UserLikeViewSet(
-    mixins.CreateModelMixin, viewsets.GenericViewSet
-):
+class UserLikeViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     queryset = UserLike.objects.all()
     serializer_class = serializers.UserLikeSerializer
     create_form_class = forms.UserLikeForm
@@ -156,7 +160,9 @@ class UserLikeViewSet(
         history = request.data.get("history", "")
         if not history:
             raise_business_exception(exceptions.EXCEPTION_PARAMETER_FORMAT_ERROR)
-        instance = self.get_queryset().filter(user=self.request.user, history=history).first()
+        instance = (
+            self.get_queryset().filter(user=self.request.user, history=history).first()
+        )
         if not instance:
             raise_business_exception(exceptions.EXCEPTION_DATA_INCLUDE_INVALID_IDS)
         instance.delete()

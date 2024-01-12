@@ -18,10 +18,9 @@ from apps.user.models import CarouselFigure
 @receiver(post_save, sender=CarouselFigure)
 @receiver(post_delete, sender=CarouselFigure)
 def clear_carousel_figure_cache(sender, **kwargs):
-    path = reverse('user:carousel_figure-list')
+    path = reverse("user:carousel_figure-list")
     request = HttpRequest()
     request.path = path
-    request.META['HTTP_HOST'] = settings.LOCAL_HOST
+    request.META["HTTP_HOST"] = settings.LOCAL_HOST
     key = _generate_cache_header_key("", request)
     cache.delete(key)
-

@@ -45,7 +45,9 @@ class PermissionProxy(Permission):
 
 
 class AccountRecord(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="用户", unique=False)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, verbose_name="用户", unique=False
+    )
     amount = models.PositiveIntegerField(default=0, verbose_name="金额")
     balance = models.PositiveIntegerField(verbose_name="余额")
     create_time = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
@@ -65,7 +67,9 @@ class AccountRecord(models.Model):
 
 
 class SignInDate(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="用户", unique=False)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, verbose_name="用户", unique=False
+    )
     date = models.DateField(auto_now_add=True, verbose_name="日期")
 
     class Meta:
@@ -110,7 +114,7 @@ class CarouselFigure(models.Model):
         ordering = ["-sort", "-id"]
 
     def save(
-            self, force_insert=False, force_update=False, using=None, update_fields=None
+        self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
         self.image = upload_image(
             f"media/carousel/{self.image.name}", self.image.read()
@@ -118,7 +122,11 @@ class CarouselFigure(models.Model):
         if self.pk:
             old_instance = type(self).objects.get(pk=self.pk)
             if old_instance.image != self.image:
-                delete_image(old_instance.image.name.replace(settings.ALIYUN_OSS_CONFIG["host"], ''))
+                delete_image(
+                    old_instance.image.name.replace(
+                        settings.ALIYUN_OSS_CONFIG["host"], ""
+                    )
+                )
         return super().save(
             force_insert=force_insert,
             force_update=force_update,
@@ -127,5 +135,5 @@ class CarouselFigure(models.Model):
         )
 
     def delete(self, using=None, keep_parents=False):
-        delete_image(self.image.name.replace(settings.ALIYUN_OSS_CONFIG["host"], ''))
+        delete_image(self.image.name.replace(settings.ALIYUN_OSS_CONFIG["host"], ""))
         return super().delete(using=using, keep_parents=keep_parents)

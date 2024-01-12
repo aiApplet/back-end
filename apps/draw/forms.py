@@ -113,9 +113,9 @@ class UserLikeForm(ModelSerializer):
 
     def validate(self, attrs):
         if UserLike.objects.filter(
-                user=self.context["request"].user,
-                history=attrs["history"],
-                create_time__date=timezone.now().date()
+            user=self.context["request"].user,
+            history=attrs["history"],
+            create_time__date=timezone.now().date(),
         ).exists():
             raise serializers.ValidationError("今日已经点过赞了，请明天再来。")
         return attrs
@@ -138,10 +138,10 @@ class UserCommentForm(ModelSerializer):
 
     def validate(self, attrs):
         if (
-                UserComment.objects.filter(
-                    user=self.context["request"].user, history=attrs["history"]
-                ).count()
-                > 5
+            UserComment.objects.filter(
+                user=self.context["request"].user, history=attrs["history"]
+            ).count()
+            > 5
         ):
             raise serializers.ValidationError("您今天已经评论过5次了，禁止再评论。")
         return attrs

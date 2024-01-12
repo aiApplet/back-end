@@ -71,17 +71,17 @@ if DEBUG:
     THIRD_PARTY_APPS += THIRD_PARTY_LOCAL_DEV_APPS
 
 INSTALLED_APPS = (
-        [
-            "simpleui",
-            "django.contrib.admin",
-            "django.contrib.auth",
-            "django.contrib.contenttypes",
-            "django.contrib.sessions",
-            "django.contrib.messages",
-            "django.contrib.staticfiles",
-        ]
-        + MY_APPS
-        + THIRD_PARTY_APPS
+    [
+        "simpleui",
+        "django.contrib.admin",
+        "django.contrib.auth",
+        "django.contrib.contenttypes",
+        "django.contrib.sessions",
+        "django.contrib.messages",
+        "django.contrib.staticfiles",
+    ]
+    + MY_APPS
+    + THIRD_PARTY_APPS
 )
 
 MIDDLEWARE = [
@@ -94,7 +94,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 if DEBUG:
-    MIDDLEWARE.append('silk.middleware.SilkyMiddleware')
+    MIDDLEWARE.append("silk.middleware.SilkyMiddleware")
 
 ROOT_URLCONF = "back_end.urls"
 
@@ -128,7 +128,7 @@ CACHES = {
         "OPTIONS": {
             "db": "1",
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            "MAX_ENTRIES": 100
+            "MAX_ENTRIES": 100,
         },
         "TIMEOUT": 60,
         "KEY_PREFIX": "AI-APPLET",

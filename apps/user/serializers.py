@@ -10,7 +10,13 @@ from rest_framework import serializers
 from apps.draw.const import DrawHistoryStatusChoices
 from apps.draw.models import DrawHistory
 from apps.user import const
-from apps.user.models import User, AccountRecord, RechargeableCard, CarouselFigure, SignInDate
+from apps.user.models import (
+    User,
+    AccountRecord,
+    RechargeableCard,
+    CarouselFigure,
+    SignInDate,
+)
 from drf.serializers import ModelSerializer
 
 
@@ -22,7 +28,16 @@ class UserSerializer(ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["id", "nickname", "avatar", "balance", "is_nickname", "shares_count", "draw_count", "sign_in"]
+        fields = [
+            "id",
+            "nickname",
+            "avatar",
+            "balance",
+            "is_nickname",
+            "shares_count",
+            "draw_count",
+            "sign_in",
+        ]
         extra_kwargs = {
             "balance": {"read_only": True},
         }
@@ -31,13 +46,19 @@ class UserSerializer(ModelSerializer):
         return obj.nickname[:2] != "游客"
 
     def get_shares_count(self, obj) -> int:
-        return AccountRecord.objects.filter(user=obj, reward_type=const.RewardTypeChoices.SHARE.value).count()
+        return AccountRecord.objects.filter(
+            user=obj, reward_type=const.RewardTypeChoices.SHARE.value
+        ).count()
 
     def get_draw_count(self, obj) -> int:
-        return DrawHistory.objects.filter(user=obj, status=DrawHistoryStatusChoices.SUCCESS.value).count()
+        return DrawHistory.objects.filter(
+            user=obj, status=DrawHistoryStatusChoices.SUCCESS.value
+        ).count()
 
     def get_sign_in(self, obj) -> bool:
-        return not SignInDate.objects.filter(user=obj, date=timezone.now().date()).exists()
+        return not SignInDate.objects.filter(
+            user=obj, date=timezone.now().date()
+        ).exists()
 
 
 class AccountRecordSerializer(ModelSerializer):
