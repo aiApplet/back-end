@@ -71,8 +71,6 @@ class DrawHistorySerializer(ModelSerializer):
         )
 
     def get_is_like(self, obj) -> bool:
-        if obj.history_set.all():
-            print(obj.history_set.all()[0].user)
         return obj.history_set.exists()
 
 
