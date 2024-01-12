@@ -108,8 +108,12 @@ class DrawHistoryAdmin(admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         return False
 
-    def has_delete_permission(self, request, obj=None):
-        return False
+    def delete_queryset(self, request, queryset):
+        """Since django's default batch deletion does not trigger the model's delete method and signal, we need to redo this method."""
+        for query in queryset:
+            delete_image(query.image.name.replace(settings.ALIYUN_OSS_CONFIG["host"], ''))
+        pre_delete.send(sender=queryset[0].__class__, instance=queryset[0])
+        queryset.delete()
 
 
 class PromptAssistantAdmin(admin.ModelAdmin):
