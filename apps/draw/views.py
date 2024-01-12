@@ -19,7 +19,7 @@ from apps.draw.models import (
     Loras,
     DrawHistory,
     UserLike,
-    UserComment,
+    UserComment, Machines,
 )
 from core import exceptions
 from core.exceptions import raise_business_exception
@@ -29,6 +29,7 @@ from drf.pagination import PageNumberPagination
 from drf.response import success_response
 from utils.aliyun import aliyun
 from utils.content_detection import get_audit_results
+from utils.redis import rd
 from utils.utils import random_dict_from_list, hash_encrypt
 
 
@@ -190,3 +191,11 @@ class UserCommentViewSet(
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
         return serializer.save()
+
+
+print("执行初始化机器状态")
+machine_ids = Machines.objects.filter(enabled=True).values_list("id", flat=True)
+for machine_id in machine_ids:
+    status = rd.get(machine_id)
+    if status is None:
+        rd.set(machine_id, 0)
