@@ -128,7 +128,7 @@ class PicturesViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
     def get_queryset(self):
         return super().get_queryset().select_related("config").prefetch_related(
-            Prefetch('config__style')
+            Prefetch('config__style', queryset=UserLike.objects.filter(user=self.request.user))
         ).select_related("user").prefetch_related("history_set")
 
 
