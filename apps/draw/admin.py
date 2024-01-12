@@ -106,8 +106,9 @@ class DrawConfigAdmin(admin.ModelAdmin):
 
 
 class DrawHistoryAdmin(admin.ModelAdmin):
-    list_display = ["id", "user", "status", "front_cover_img_data"]
+    list_display = ["user", "audit", "front_cover_img_data"]
     list_per_page = 10
+    list_editable = ["audit"]
 
     def front_cover_img_data(self, obj):
         html = ""
