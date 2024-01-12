@@ -26,6 +26,7 @@ from core.exceptions import raise_business_exception
 from drf import mixins
 from drf import viewsets
 from drf.pagination import PageNumberPagination
+from drf.permissions import BalancePermission
 from drf.response import success_response
 from utils.aliyun import aliyun
 from utils.content_detection import get_audit_results
@@ -41,7 +42,7 @@ class DrawViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     serializer_class = serializers.DrawHistoryImageSerializer
     create_form_class = forms.DrawConfigCreateForms
     permission_classes = [
-        IsAuthenticated,
+        IsAuthenticated, BalancePermission
     ]
 
 

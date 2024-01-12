@@ -16,6 +16,8 @@ from rest_framework import serializers
 
 from apps.draw import const
 from apps.draw.models import DrawConfig, DrawHistory, UserLike, UserComment
+from apps.user.const import RewardTypeChoices
+from apps.user.models import AccountRecord
 from core import exceptions
 from core.exceptions import raise_business_exception
 from drf.serializers import ModelSerializer
@@ -26,7 +28,6 @@ from utils.utils import random_name
 
 
 class DrawConfigCreateForms(ModelSerializer):
-
     class Meta:
         model = DrawConfig
         exclude = ["id", "config", "sampler_name"]
@@ -46,6 +47,7 @@ class DrawConfigCreateForms(ModelSerializer):
 
     @transaction.atomic
     def create(self, validated_data):
+        user = self.context["request"].user
         validated_data["sampler_name"] = settings.STABLE_DIFFUSION_CONFIG[
             "sampler_name"
         ]
@@ -75,7 +77,7 @@ class DrawConfigCreateForms(ModelSerializer):
         instance = super().create(validated_data)
 
         result = StableDiffusion.generate_image(
-            "/sdapi/v1/txt2img", instance, self.context["request"].user
+            "/sdapi/v1/txt2img", instance, user
         )
         images = result.get("images", None)
         if not images:
@@ -93,7 +95,7 @@ class DrawConfigCreateForms(ModelSerializer):
         status = const.DrawHistoryStatusChoices.SUCCESS.value
         draw = DrawHistory.objects.create(
             config=instance,
-            user=self.context["request"].user,
+            user=user,
             image=img_file,
             status=status,
         )
@@ -102,6 +104,17 @@ class DrawConfigCreateForms(ModelSerializer):
         seed = json.loads(result["info"])["seed"]
         instance.seed = seed
         instance.save()
+        if not user.is_superuser:
+            user.balance -= 1
+            user.save()
+            AccountRecord.objects.create(
+                user=user,
+                amount=settings.GEN_IMAGE_COST,
+                balance=user.balance,
+                record_type=False,
+                reward_type=RewardTypeChoices.DRAW.value,
+                remark=f"使用AI绘图，扣除积分:{settings.GEN_IMAGE_COST}",
+            )
         return draw
 
 
@@ -115,9 +128,9 @@ class UserLikeForm(ModelSerializer):
 
     def validate(self, attrs):
         if UserLike.objects.filter(
-            user=self.context["request"].user,
-            history=attrs["history"],
-            create_time__date=timezone.now().date(),
+                user=self.context["request"].user,
+                history=attrs["history"],
+                create_time__date=timezone.now().date(),
         ).exists():
             raise serializers.ValidationError("今日已经点过赞了，请明天再来。")
         return attrs
@@ -140,10 +153,10 @@ class UserCommentForm(ModelSerializer):
 
     def validate(self, attrs):
         if (
-            UserComment.objects.filter(
-                user=self.context["request"].user, history=attrs["history"]
-            ).count()
-            > 5
+                UserComment.objects.filter(
+                    user=self.context["request"].user, history=attrs["history"]
+                ).count()
+                > 5
         ):
             raise serializers.ValidationError("您今天已经评论过5次了，禁止再评论。")
         return attrs

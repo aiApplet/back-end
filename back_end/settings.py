@@ -212,6 +212,8 @@ SIMPLE_JWT = {
 SIGN_IN_REWARD = 1
 # 邀请新用户奖励
 SHARE_NEW_USER = 1
+# 单次生图花费
+GEN_IMAGE_COST = 1
 
 # stable diffusion 配置
 STABLE_DIFFUSION_CONFIG = {

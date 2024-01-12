@@ -3,7 +3,7 @@ import logging
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
 from django.http import Http404
-from rest_framework.exceptions import ValidationError, APIException
+from rest_framework.exceptions import ValidationError, APIException, PermissionDenied as pd
 from rest_framework.views import set_rollback
 
 from core.exceptions import BusinessException, EXCEPTION_PARAMETER_FORMAT_ERROR
@@ -44,6 +44,10 @@ def exception_handler(exc, context):
 
     if isinstance(exc, Http404):
         api_exception = BusinessException(code=404, message="找不到对应的数据详情")
+        return business_exception_handler(api_exception, context)
+
+    if isinstance(exc, PermissionDenied) or isinstance(exc, pd):
+        api_exception = BusinessException(code=403, message=exc.detail)
         return business_exception_handler(api_exception, context)
 
     if isinstance(exc, PermissionDenied):

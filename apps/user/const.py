@@ -8,3 +8,4 @@ class RewardTypeChoices(IntegerChoices):
     SIGN_IN = 0, "签到"
     SHARE = 1, "分享"
     RECHARGE = 2, "充值"
+    DRAW = 3, "绘图"
