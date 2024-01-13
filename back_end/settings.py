@@ -126,7 +126,6 @@ CACHES = {
         "BACKEND": "django_redis.cache.RedisCache",
         "LOCATION": env("REDIS_LOCATION"),
         "OPTIONS": {
-            "db": "1",
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "MAX_ENTRIES": 100,
         },
