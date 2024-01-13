@@ -106,9 +106,9 @@ class DrawConfigAdmin(admin.ModelAdmin):
 
 
 class DrawHistoryAdmin(admin.ModelAdmin):
-    list_display = ["user", "audit", "front_cover_img_data"]
+    list_display = ["user", "audit", "audit_txt", "front_cover_img_data", "create_time", "like_count", "comment_count"]
     list_per_page = 10
-    list_editable = ["audit"]
+    list_editable = ["audit", "audit_txt"]
 
     def front_cover_img_data(self, obj):
         html = ""
@@ -116,15 +116,8 @@ class DrawHistoryAdmin(admin.ModelAdmin):
             html = f"""
               <div style="position: relative">
                 <a href="{obj.image}" target="_blank">
-                  <img src="{obj.image}" width="100%" height="100%"> 
+                  <img src="{obj.image}" width="50%" height="50%"> 
                 </a>
-                <div style="position: absolute; top: 0; left: 0; display: none;" class="zoom-img">
-                  <img src="{obj.image}">
-                  <div 
-                    style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; cursor: zoom-out;" 
-                    onclick="this.parentElement.style.display='none'">
-                  </div>
-                </div>
               </div>
             """
 
@@ -133,9 +126,6 @@ class DrawHistoryAdmin(admin.ModelAdmin):
     front_cover_img_data.short_description = "图片"
 
     def has_add_permission(self, request):
-        return False
-
-    def has_change_permission(self, request, obj=None):
         return False
 
     def delete_queryset(self, request, queryset):
