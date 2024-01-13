@@ -58,6 +58,8 @@ attrs==23.2.0
     #   aiohttp
     #   jsonschema
     #   referencing
+autopep8==2.0.4
+    # via django-silk
 build==1.0.3
     # via pip-tools
 certifi==2023.11.17
@@ -76,8 +78,10 @@ cryptography==41.0.7
     #   aliyun-python-sdk-core
 django==5.0
     # via
+    #   django-extensions
     #   django-filter
     #   django-redis
+    #   django-silk
     #   django-simpleui
     #   djangorestframework
     #   djangorestframework-simplejwt
@@ -86,9 +90,13 @@ django-cleanup==8.0.0
     # via -r requirements.in
 django-environ==0.11.2
     # via -r requirements.in
+django-extensions==3.2.3
+    # via -r requirements.in
 django-filter==23.5
     # via -r requirements.in
 django-redis==5.4.0
+    # via -r requirements.in
+django-silk==5.0.4
     # via -r requirements.in
 django-simpleui==2023.12.12
     # via -r requirements.in
@@ -105,6 +113,8 @@ frozenlist==1.4.1
     # via
     #   aiohttp
     #   aiosignal
+gprof2dot==2022.7.29
+    # via django-silk
 gunicorn==21.2.0
     # via -r requirements.in
 idna==3.6
@@ -139,6 +149,8 @@ pillow==10.2.0
     # via -r requirements.in
 pip-tools==7.3.0
     # via -r requirements.in
+pycodestyle==2.11.1
+    # via autopep8
 pycparser==2.21
     # via cffi
 pycryptodome==3.19.1
@@ -176,9 +188,12 @@ six==1.16.0
     #   python-dateutil
     #   wechatpy
 sqlparse==0.4.4
-    # via django
+    # via
+    #   django
+    #   django-silk
 tomli==2.0.1
     # via
+    #   autopep8
     #   build
     #   pip-tools
     #   pyproject-hooks

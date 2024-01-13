@@ -61,8 +61,8 @@ pip install -r requirements.txt
 3. 修改配置文件
 
 ```shell
-cd back-end
-mkdir .env
+cd back_end
+touch .env
 ```
 
 ```python
