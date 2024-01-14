@@ -110,6 +110,8 @@ class SignInDateForms(ModelSerializer):
 
 
 class RechargeableCardForms(ModelSerializer):
+    card_number = serializers.CharField(max_length=20, min_length=10)
+
     class Meta:
         model = RechargeableCard
         fields = [
