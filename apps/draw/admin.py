@@ -78,7 +78,7 @@ class LorasAdmin(admin.ModelAdmin):
         """Since django's default batch deletion does not trigger the model's delete method and signal, we need to redo this method."""
         for query in queryset:
             delete_image(
-                query.image.name.replace(settings.ALIYUN_OSS_CONFIG["host"], "")
+                query.cover.name.replace(settings.ALIYUN_OSS_CONFIG["host"], "")
             )
         pre_delete.send(sender=queryset[0].__class__, instance=queryset[0])
         queryset.delete()

@@ -76,7 +76,6 @@ class Loras(models.Model):
     def save(
             self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
-        self.cover = upload_image(f"media/lora/{self.cover.name}", self.cover.read())
         if self.pk:
             old_instance = type(self).objects.get(pk=self.pk)
             if old_instance.cover != self.cover:
@@ -85,13 +84,16 @@ class Loras(models.Model):
                         settings.ALIYUN_OSS_CONFIG["host"], ""
                     )
                 )
+                self.cover = upload_image(f"media/lora/{self.cover.name}", self.cover.read())
+        else:
+            self.cover = upload_image(f"media/lora/{self.cover.name}", self.cover.read())
         return super().save(
             force_insert=force_insert,
             force_update=force_update,
             using=using,
             update_fields=update_fields,
         )
-
+    
 
 class DrawConfig(models.Model):
     prompt = models.CharField(max_length=1000, default="", verbose_name="提示词")

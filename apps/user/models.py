@@ -123,9 +123,7 @@ class CarouselFigure(models.Model):
     def save(
         self, force_insert=False, force_update=False, using=None, update_fields=None
     ):
-        self.image = upload_image(
-            f"media/carousel/{self.image.name}", self.image.read()
-        )
+        
         if self.pk:
             old_instance = type(self).objects.get(pk=self.pk)
             if old_instance.image != self.image:
@@ -134,6 +132,9 @@ class CarouselFigure(models.Model):
                         settings.ALIYUN_OSS_CONFIG["host"], ""
                     )
                 )
+                self.image = upload_image(f"media/carousel/{self.image.name}", self.image.read())
+        else:
+            self.image = upload_image(f"media/carousel/{self.image.name}", self.image.read())
         return super().save(
             force_insert=force_insert,
             force_update=force_update,
