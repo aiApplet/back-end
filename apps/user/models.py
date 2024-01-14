@@ -1,3 +1,5 @@
+import random
+import string
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
 
@@ -79,8 +81,13 @@ class SignInDate(models.Model):
         ordering = ["-id"]
 
 
+def random_card_number():
+    """生成随机卡号"""
+    return "".join(random.choices(string.ascii_uppercase + string.digits, k=16))
+
+
 class RechargeableCard(models.Model):
-    card_number = models.CharField(max_length=20, unique=True, verbose_name="卡号")
+    card_number = models.CharField(max_length=20, unique=True, verbose_name="卡号", default=random_card_number)
     amount = models.PositiveIntegerField(default=0, verbose_name="金额")
     is_used = models.BooleanField(default=False, verbose_name="是否已使用")
     create_time = models.DateTimeField(auto_now_add=True, verbose_name="创建时间")
