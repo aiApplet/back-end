@@ -12,7 +12,7 @@ from utils.aliyun import upload_image, delete_image
 # Create your models here.
 class User(AbstractUser):
     avatar = models.CharField(
-        max_length=100, default=settings.DEFAULT_AVATAR, verbose_name="头像"
+        max_length=255, default=settings.DEFAULT_AVATAR, verbose_name="头像"
     )
     nickname = models.CharField(max_length=100, verbose_name="微信昵称")
     balance = models.PositiveIntegerField(default=0, verbose_name="余额")
