@@ -36,10 +36,3 @@ def local_timestamp():
 def make_key(key, key_prefix, version):
     return ":".join([key_prefix, str(version), key])
 
-
-def hash_encrypt(data):
-    hash_object = hashlib.sha256()
-    hash_object.update(data.encode())
-    # 获取16进制格式的摘要
-    hex_dig = hash_object.hexdigest()
-    return hex_dig

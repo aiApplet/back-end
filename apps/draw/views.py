@@ -19,7 +19,7 @@ from apps.draw.models import (
     Loras,
     DrawHistory,
     UserLike,
-    UserComment, Machines,
+    UserComment,
 )
 from core import exceptions
 from core.exceptions import raise_business_exception
@@ -31,7 +31,7 @@ from drf.response import success_response
 from utils.aliyun import aliyun
 from utils.content_detection import get_audit_results
 from utils.redis import rd
-from utils.utils import random_dict_from_list, hash_encrypt
+from utils.utils import random_dict_from_list
 
 
 # Create your views here.
@@ -71,11 +71,6 @@ class AliyunOssTokenViewSet(APIView):
     @extend_schema(
         tags=["阿里云配置"],
         summary="获取阿里云配置，用于上传阿里云。需要参数secret_key，使用SHA256加密微信小程序appid",
-        parameters=[
-            OpenApiParameter(
-                "secret_key", description="SHA256加密微信小程序appid", required=True, type=str
-            ),
-        ],
         description="""
             {
                 "accessid": "",
@@ -89,9 +84,6 @@ class AliyunOssTokenViewSet(APIView):
     )
     def get(self, request, *args, **kwargs) -> dict:
         if settings.ALIYUN_OSS_ENABLE:
-            secret_key = request.query_params.get("secret_key", None)
-            if hash_encrypt(settings.WE_CHAT["APPID"]) != secret_key:
-                raise_business_exception(exceptions.EXCEPTION_KEY_MISMATCH, app="draw")
             token = aliyun.get_token()
             return success_response(token)
         raise_business_exception(exceptions.EXCEPTION_SERVER_NOT_ENABLE, app="draw")
