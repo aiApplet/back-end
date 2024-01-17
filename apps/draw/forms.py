@@ -15,7 +15,7 @@ from django.utils import timezone
 from rest_framework import serializers
 
 from apps.draw import const
-from apps.draw.models import DrawConfig, DrawHistory, UserLike, UserComment
+from apps.draw.models import DrawConfig, DrawHistory, Loras, UserLike, UserComment
 from apps.user.const import RewardTypeChoices
 from apps.user.models import AccountRecord
 from core import exceptions
@@ -28,6 +28,7 @@ from utils.utils import random_name
 
 
 class DrawConfigCreateForms(ModelSerializer):
+    lora = serializers.JSONField(required=False)
     class Meta:
         model = DrawConfig
         exclude = ["id", "config", "sampler_name"]
@@ -40,13 +41,31 @@ class DrawConfigCreateForms(ModelSerializer):
                 "required": False,
                 "default": settings.STABLE_DIFFUSION_CONFIG["seed"],
             },
-            "lora": {
-                "required": False,
-            },
         }
+    def validate_lora(self, value):
+        data = []
+        if value:
+            if not isinstance(value, list):
+                raise_business_exception(exceptions.EXCEPTION_PARAMETER_FORMAT_ERROR, "lora参数必须为数组")
+            for item in value:
+                if not isinstance(item, dict):
+                    raise_business_exception(exceptions.EXCEPTION_PARAMETER_FORMAT_ERROR, "lora参数必须为字典")
+                if "id" not in item or "weight" not in item:
+                    raise_business_exception(exceptions.EXCEPTION_PARAMETER_FORMAT_ERROR, "lora参数必须包含path和weight字段")
+                else:
+                    if not isinstance(item["id"], int) or not isinstance(item["weight"], int):
+                        raise_business_exception(exceptions.EXCEPTION_PARAMETER_FORMAT_ERROR, "lora参数的path和weight字段必须为整数")
+                    else:
+                        lora = Loras.objects.filter(id=item["id"]).first()
+                        if not lora:
+                            raise_business_exception(exceptions.EXCEPTION_PARAMETER_FORMAT_ERROR, "找不到lora")
+                        else:
+                            data.append({lora: item["weight"]})
+        return data
 
     @transaction.atomic
     def create(self, validated_data):
+        raise Exception("不允许创建")
         user = self.context["request"].user
         validated_data["sampler_name"] = settings.STABLE_DIFFUSION_CONFIG[
             "sampler_name"
@@ -54,8 +73,8 @@ class DrawConfigCreateForms(ModelSerializer):
         loras = validated_data.get("lora", None)
         lora_prompt = ""
         if loras:
-            for lora in loras:
-                lora_prompt += f"<lora:{lora.nickname}:{lora.weight}>,"
+            for lora, weight in loras.items:
+                lora_prompt += f"<lora:{lora.nickname}:{weight}>,"
         prompt = f"{lora_prompt}{validated_data['style'].style}{validated_data['prompt']}{'' if validated_data['prompt'][-1] == ',' else ','}"
         validated_data["config"] = {
             "prompt": prompt,

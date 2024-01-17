@@ -41,9 +41,13 @@ class DrawViewSet(mixins.CreateModelMixin, viewsets.GenericViewSet):
     queryset = DrawConfig.objects.all()
     serializer_class = serializers.DrawHistoryImageSerializer
     create_form_class = forms.DrawConfigCreateForms
-    permission_classes = [
-        IsAuthenticated, BalancePermission
-    ]
+    permission_classes = [IsAuthenticated, BalancePermission]
+
+    def create(self, request, *args, **kwargs):
+        """
+        lora 格式 [{"id": 1, "weight": 1}]
+        """
+        return super().create(request, *args, **kwargs)
 
 
 class PromptsViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
