@@ -29,6 +29,7 @@ from utils.utils import random_name
 
 class DrawConfigCreateForms(ModelSerializer):
     lora = serializers.JSONField(required=False)
+
     class Meta:
         model = DrawConfig
         exclude = ["id", "config", "sampler_name"]
@@ -42,8 +43,9 @@ class DrawConfigCreateForms(ModelSerializer):
                 "default": settings.STABLE_DIFFUSION_CONFIG["seed"],
             },
         }
+
     def validate_lora(self, value):
-        data = []
+        data = {}
         if value:
             if not isinstance(value, list):
                 raise_business_exception(exceptions.EXCEPTION_PARAMETER_FORMAT_ERROR, "lora参数必须为数组")
@@ -60,12 +62,11 @@ class DrawConfigCreateForms(ModelSerializer):
                         if not lora:
                             raise_business_exception(exceptions.EXCEPTION_PARAMETER_FORMAT_ERROR, "找不到lora")
                         else:
-                            data.append({lora: item["weight"]})
+                            data[lora.nickname] = item["weight"]
         return data
 
     @transaction.atomic
     def create(self, validated_data):
-        raise Exception("不允许创建")
         user = self.context["request"].user
         validated_data["sampler_name"] = settings.STABLE_DIFFUSION_CONFIG[
             "sampler_name"
@@ -73,8 +74,9 @@ class DrawConfigCreateForms(ModelSerializer):
         loras = validated_data.get("lora", None)
         lora_prompt = ""
         if loras:
-            for lora, weight in loras.items:
-                lora_prompt += f"<lora:{lora.nickname}:{weight}>,"
+            for lora, weight in loras.items():
+                lora_prompt += f"<lora:{lora}:{weight}>,"
+
         prompt = f"{lora_prompt}{validated_data['style'].style}{validated_data['prompt']}{'' if validated_data['prompt'][-1] == ',' else ','}"
         validated_data["config"] = {
             "prompt": prompt,
